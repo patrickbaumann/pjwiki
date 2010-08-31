@@ -50,6 +50,10 @@ public class PjWikiApp extends SingleFrameApplication {
         launch(PjWikiApp.class, args);
     }
 
+    static String wordFileExtension = ".pwk";
+    static String backupFileExtension = ".bak";
+    static String lockFileExtension = ".lock";
+
     private File dataPath;
     static Pattern dataPathPattern = Pattern.compile("^<datapath>([^<]+)</datapath>$");
     public void loadSettings(String settingsFile) throws FileNotFoundException, IOException, ParseException
@@ -80,4 +84,32 @@ public class PjWikiApp extends SingleFrameApplication {
             throw e;
         }
     }
+
+    public String getWikiWordText(WikiWord word)
+    {
+        String wordText = "";
+        
+
+
+        return wordText;
+    }
+
+    public boolean saveWikiWord(WikiWord word, String contents)
+    {
+        return false;
+    }
+
+    public boolean tryLock(WikiWord word)
+    {
+        return false;
+    }
+    public boolean isModifiable(WikiWord word, String username)
+    {
+        return false;
+    }
+    public boolean unlock(WikiWord word)
+    {
+        return true;
+    }
+
 }

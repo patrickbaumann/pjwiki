@@ -106,6 +106,16 @@ public class WikiWord {
         return fullpath;
     }
 
+    public String toFilePath()
+    {
+        String filePath = "";
+        for(String word : wikiPath)
+        {
+            filePath += "\\" + word;
+        }
+        return filePath;
+    }
+
     static char DELIMITER = ':';
     static String INDEX_TEXT = "index";
     static String validWord = "[a-zA-Z][-a-zA-Z0-9_ ]*[a-zA-Z0-9]";
