@@ -4,6 +4,14 @@
 
 package pjwiki;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -42,11 +50,34 @@ public class PjWikiApp extends SingleFrameApplication {
         launch(PjWikiApp.class, args);
     }
 
+    private File dataPath;
+    static Pattern dataPathPattern = Pattern.compile("^<datapath>([^<]+)</datapath>$");
+    public void loadSettings(String settingsFile) throws FileNotFoundException, IOException, ParseException
+    {
+        BufferedReader in;
+        String line;
 
+        // Load target connections
+        in = new BufferedReader( new FileReader(settingsFile));
+        while(null != (line = in.readLine()))
+        {
+            Matcher m = dataPathPattern.matcher(line);
+            if(m.matches())
+            {
+                dataPath = new File(m.group(1));
+            }
+        }
+        in.close();
 
-//    private String loadWikiText(String Wikiword)
-//    {
-//
-//    }
-
+        if(dataPath == null)
+        {
+            ParseException e = new ParseException("", 0);
+            throw e;
+        }
+        else if(!dataPath.isDirectory())
+        {
+            TypeNotPresentException e = new TypeNotPresentException("directory", new Throwable("path is not a directory"));
+            throw e;
+        }
+    }
 }

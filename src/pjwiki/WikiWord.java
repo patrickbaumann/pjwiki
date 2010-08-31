@@ -5,7 +5,6 @@
 
 package pjwiki;
 
-import com.sun.org.apache.xpath.internal.axes.SelfIteratorNoPredicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
