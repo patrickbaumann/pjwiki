@@ -83,9 +83,11 @@ public class WikiWordTest {
         System.out.println("rootpath");
         assertEquals(":singleWord", (new WikiWord(":singleWord")).toString());
         System.out.println("implicit multi word");
-        assertEquals(":foo:bar", (new WikiWord("foo:bar")).toString());
+        assertEquals(":foo:bar:test:stuff", (new WikiWord("foo:bar:test:stuff")).toString());
         System.out.println("explicit multi word");
         assertEquals(":foo:bar", (new WikiWord(":foo:bar")).toString());
+        System.out.println("index included");
+        assertEquals(":foo:bar:index", (new WikiWord(":foo:bar:")).toString());
     }
 
     @Test
@@ -98,6 +100,31 @@ public class WikiWordTest {
         assertEquals(true, relative.isValid());
         assertEquals(":test:path2", relative.toString());
 
-    }
+        System.out.println("child word");
+        relative = new WikiWord("path:testing", anchor);
+        assertEquals(true, relative.isValid());
+        assertEquals(":test:path:testing", relative.toString());
 
+        System.out.println("relative word");
+        relative = new WikiWord(".:path2", anchor);
+        assertEquals(true, relative.isValid());
+        assertEquals(":test:path2", relative.toString());
+
+        System.out.println("relative word");
+        relative = new WikiWord("..:path2", anchor);
+        assertEquals(true, relative.isValid());
+        assertEquals(":path2", relative.toString());
+
+        System.out.println("relative word");
+        relative = new WikiWord("..:path2:", anchor);
+        assertEquals(true, relative.isValid());
+        assertEquals(":path2:"+WikiWord.INDEX_TEXT, relative.toString());
+
+        System.out.println("explicit root");
+        relative = new WikiWord("path2:", anchor);
+        assertEquals(true, relative.isValid());
+        assertEquals(":test:path2:"+WikiWord.INDEX_TEXT, relative.toString());
+
+
+    }
 }
