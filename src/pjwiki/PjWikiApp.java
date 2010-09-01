@@ -31,6 +31,7 @@ public class PjWikiApp extends SingleFrameApplication {
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
+     * @param root
      */
     @Override protected void configureWindow(java.awt.Window root) {
     }
@@ -45,18 +46,21 @@ public class PjWikiApp extends SingleFrameApplication {
 
     /**
      * Main method launching the application.
+     * @param args
      */
     public static void main(String[] args) {
         launch(PjWikiApp.class, args);
     }
 
-    static String wordFileExtension = ".pwk";
-    static String backupFileExtension = ".bak";
-    static String lockFileExtension = ".lock";
-
-    private File dataPath;
     static Pattern dataPathPattern = Pattern.compile("^<datapath>([^<]+)</datapath>$");
-    public void loadSettings(String settingsFile) throws FileNotFoundException, IOException, ParseException
+    /**
+     * 
+     * @param settingsFile
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ParseException
+     */
+    public void loadSettings(String settingsFile) throws FileNotFoundException, IOException, ParseException, Exception
     {
         BufferedReader in;
         String line;
@@ -68,48 +72,15 @@ public class PjWikiApp extends SingleFrameApplication {
             Matcher m = dataPathPattern.matcher(line);
             if(m.matches())
             {
-                dataPath = new File(m.group(1));
+                WikiWordFile.setDataRoot(new File(m.group(1)));
             }
         }
         in.close();
 
-        if(dataPath == null)
+        if(WikiWordFile.getDataRoot() == null)
         {
-            ParseException e = new ParseException("", 0);
-            throw e;
-        }
-        else if(!dataPath.isDirectory())
-        {
-            TypeNotPresentException e = new TypeNotPresentException("directory", new Throwable("path is not a directory"));
+            ParseException e = new ParseException("Settings file does not contain a datapath tag", 0);
             throw e;
         }
     }
-
-    public String getWikiWordText(WikiWord word)
-    {
-        String wordText = "";
-        
-
-
-        return wordText;
-    }
-
-    public boolean saveWikiWord(WikiWord word, String contents)
-    {
-        return false;
-    }
-
-    public boolean tryLock(WikiWord word)
-    {
-        return false;
-    }
-    public boolean isModifiable(WikiWord word, String username)
-    {
-        return false;
-    }
-    public boolean unlock(WikiWord word)
-    {
-        return true;
-    }
-
 }

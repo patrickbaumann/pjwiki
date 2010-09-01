@@ -85,12 +85,20 @@ public class WikiWord {
     private String input;
     private List<String> wikiPath;
 
+    /**
+     *
+     * @return
+     */
     public List<String> getWikiPath() {
         List<String> temp = new ArrayList<String>(wikiPath);
         return temp;
     }
     private boolean valid;
 
+    /**
+     *
+     * @return
+     */
     public boolean isValid() {
         return valid;
     }
@@ -106,6 +114,10 @@ public class WikiWord {
         return fullpath;
     }
 
+    /**
+     *
+     * @return
+     */
     public String toFilePath()
     {
         String filePath = "";

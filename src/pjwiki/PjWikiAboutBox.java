@@ -6,14 +6,25 @@ package pjwiki;
 
 import org.jdesktop.application.Action;
 
+/**
+ *
+ * @author Patrick
+ */
 public class PjWikiAboutBox extends javax.swing.JDialog {
 
+    /**
+     *
+     * @param parent
+     */
     public PjWikiAboutBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
         getRootPane().setDefaultButton(closeButton);
     }
 
+    /**
+     *
+     */
     @Action public void closeAboutBox() {
         dispose();
     }
