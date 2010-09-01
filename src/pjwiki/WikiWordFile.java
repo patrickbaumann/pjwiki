@@ -21,6 +21,17 @@ public class WikiWordFile {
 
     private static File dataRoot;
 
+    WikiWordFile(WikiWord word) throws Exception
+    {
+        this.word = word;
+        validate();
+    }
+    WikiWordFile(String wikiWordString) throws Exception
+    {
+        this.word = new WikiWord(wikiWordString);
+        validate();
+    }
+
     /**
      *
      * @throws Exception
