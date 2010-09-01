@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -20,11 +21,48 @@ import org.jdesktop.application.SingleFrameApplication;
  */
 public class PjWikiApp extends SingleFrameApplication {
 
+    @Override protected void initialize(String[] args)
+    {
+        // set default options
+        optionsPath = "./settings.conf";
+        launchWithWikiWord = null;
+        username = System.getProperty("user.name");
+
+        // parse command line arguments
+        for(int i = 0; i < args.length; i++)
+        {
+            if((args[i].contentEquals("-o") || args[i].contentEquals("--options"))
+                    && i+1 < args.length)
+            {
+                ++i;
+                optionsPath = args[i];
+            }
+            else if((args[i].contentEquals("-w") || args[i].contentEquals("--word"))
+                    && i+1 < args.length)
+            {
+                ++i;
+                launchWithWikiWord = new WikiWord(args[i]);
+            }
+            else if((args[i].contentEquals("-u") || args[i].contentEquals("--username"))
+                    && i+1 < args.length)
+            {
+                ++i;
+                username = args[i];
+            }
+        }
+    }
+
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        show(new PjWikiView(this));
+        try {
+            loadSettings(optionsPath);
+            show(new PjWikiView(this, launchWithWikiWord));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Launch issue: " + ex.getMessage());
+            this.exit();
+        }
     }
 
     /**
@@ -82,5 +120,13 @@ public class PjWikiApp extends SingleFrameApplication {
             ParseException e = new ParseException("Settings file does not contain a datapath tag", 0);
             throw e;
         }
+    }
+
+    private String optionsPath;
+    private WikiWord launchWithWikiWord;
+
+    private String username;
+    public String getUsername() {
+        return username;
     }
 }

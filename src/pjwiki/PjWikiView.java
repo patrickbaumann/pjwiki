@@ -25,8 +25,13 @@ public class PjWikiView extends FrameView {
      *
      * @param app
      */
-    public PjWikiView(SingleFrameApplication app) {
+    public PjWikiView(SingleFrameApplication app, WikiWord launchWithWikiWord) throws Exception {
         super(app);
+
+        if(launchWithWikiWord != null)
+        {
+            currentWikiWordFile = new WikiWordFile(launchWithWikiWord);
+        }
 
         initComponents();
 
@@ -138,6 +143,7 @@ public class PjWikiView extends FrameView {
         statusAnimationLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
 
+        mainPanel.setDebugGraphicsOptions(javax.swing.DebugGraphics.FLASH_OPTION);
         mainPanel.setName("mainPanel"); // NOI18N
 
         jSplitPane1.setDividerLocation(200);
@@ -153,6 +159,7 @@ public class PjWikiView extends FrameView {
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
         jToolBar1.setName("jToolBar1"); // NOI18N
 
@@ -179,7 +186,7 @@ public class PjWikiView extends FrameView {
         navGoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(navGoButton);
 
-        navForwardButton.setIcon(resourceMap.getIcon("navForwardButton.icon")); // NOI18N
+        navForwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-26.png"))); // NOI18N
         navForwardButton.setText(resourceMap.getString("navForwardButton.text")); // NOI18N
         navForwardButton.setToolTipText(resourceMap.getString("navForwardButton.toolTipText")); // NOI18N
         navForwardButton.setFocusable(false);
@@ -232,7 +239,7 @@ public class PjWikiView extends FrameView {
         jToolBar2.setRollover(true);
         jToolBar2.setName("jToolBar2"); // NOI18N
 
-        homeButton.setIcon(resourceMap.getIcon("homeButton.icon")); // NOI18N
+        homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-0.png"))); // NOI18N
         homeButton.setText(resourceMap.getString("homeButton.text")); // NOI18N
         homeButton.setToolTipText(resourceMap.getString("homeButton.toolTipText")); // NOI18N
         homeButton.setFocusable(false);
@@ -253,7 +260,7 @@ public class PjWikiView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -296,7 +303,7 @@ public class PjWikiView extends FrameView {
             .add(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(statusMessageLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 528, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 482, Short.MAX_VALUE)
                 .add(progressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusAnimationLabel)
@@ -354,4 +361,5 @@ public class PjWikiView extends FrameView {
     private int busyIconIndex = 0;
 
     private JDialog aboutBox;
+    private WikiWordFile currentWikiWordFile;
 }
