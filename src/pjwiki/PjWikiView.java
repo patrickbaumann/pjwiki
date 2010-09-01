@@ -21,6 +21,10 @@ import javax.swing.JFrame;
  */
 public class PjWikiView extends FrameView {
 
+    /**
+     *
+     * @param app
+     */
     public PjWikiView(SingleFrameApplication app) {
         super(app);
 
@@ -81,6 +85,9 @@ public class PjWikiView extends FrameView {
         });
     }
 
+    /**
+     *
+     */
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
