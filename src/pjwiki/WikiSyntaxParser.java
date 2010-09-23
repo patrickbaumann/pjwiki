@@ -5,17 +5,20 @@
 
 package pjwiki;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author Patrick
  */
 public class WikiSyntaxParser {
-    public class Pair{
-        public WikiWord from;
-        public WikiWord to;
+    public String prepare(String text)
+    {
+        // Default class, do nothing
+        return text;
     }
-    static List<Pair> linkList;// = new ArrayList<WikiSyntaxParser.Pair>();
+
+    public String execute(String text)
+    {
+        // Default class, do nothing
+        return text;
+    }
 }

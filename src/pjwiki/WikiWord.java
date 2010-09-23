@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
  * @author Patrick
  */
 public class WikiWord {
+    public class WikiLink{
+        public WikiWord from;
+        public WikiWord to;
+    }
 
     WikiWord(String rawString)
     {

@@ -15,6 +15,8 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.text.StyledEditorKit;
 
 /**
  * The application's main frame.
@@ -143,7 +145,6 @@ public class PjWikiView extends FrameView {
         statusAnimationLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
 
-        mainPanel.setDebugGraphicsOptions(javax.swing.DebugGraphics.FLASH_OPTION);
         mainPanel.setName("mainPanel"); // NOI18N
 
         jSplitPane1.setDividerLocation(200);
@@ -184,6 +185,11 @@ public class PjWikiView extends FrameView {
         navGoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         navGoButton.setName("navGoButton"); // NOI18N
         navGoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        navGoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                navGoButtonActionPerformed(evt);
+            }
+        });
         jToolBar1.add(navGoButton);
 
         navForwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-26.png"))); // NOI18N
@@ -325,6 +331,32 @@ public class PjWikiView extends FrameView {
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void navGoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navGoButtonActionPerformed
+        if(contentTextPane.getContentType().contentEquals("text/html"))
+        {
+            try{
+                contentTextPane.setEditorKit(new StyledEditorKit());
+                contentTextPane.setEditable(true);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            }
+        }
+        else
+        {
+            try{
+                WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
+                String text = "<html><head></head><body>"+w.execute(contentTextPane.getText())+"</body></html>";
+                //contentTextPane.setContentType("text/html");
+                contentTextPane.setEditable(false);
+                contentTextPane.setContentType("text/html");
+                contentTextPane.setText(text);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            }
+        }
+        contentTextPane.revalidate();
+    }//GEN-LAST:event_navGoButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane contentTextPane;

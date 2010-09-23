@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -129,4 +131,7 @@ public class PjWikiApp extends SingleFrameApplication {
     public String getUsername() {
         return username;
     }
+
+    static List<WikiWord.WikiLink> linkList
+            = new ArrayList<WikiWord.WikiLink>();
 }
