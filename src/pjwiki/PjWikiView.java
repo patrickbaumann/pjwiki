@@ -333,7 +333,8 @@ public class PjWikiView extends FrameView {
         {
             try{
                 WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
-                String text = "<html><head></head><body>"+w.execute(contentTextPane.getText())+"</body></html>";
+                WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
+                String text = "<html><head></head><body>"+w2.execute(w.execute(contentTextPane.getText()))+"</body></html>";
                 //contentTextPane.setContentType("text/html");
                 contentTextPane.setEditable(false);
                 contentTextPane.setContentType("text/html");

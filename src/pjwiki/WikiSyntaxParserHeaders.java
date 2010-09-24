@@ -96,9 +96,9 @@ public class WikiSyntaxParserHeaders extends WikiSyntaxParser{
         {
             int size = 7 - m.group(1).length();
             headerNode n = new headerNode(m.group(2), size);
-            String parent_link = headerRoot.addChild(n);
-            text = m.replaceFirst("<a name=\""+parent_link+"\"/><h"+size+">"
-                    +n.name+"</h"+size+">");
+            String link = headerRoot.addChild(n);
+            text = m.replaceFirst("<a name=\""+link+"\"><h"+size+">"
+                    +n.name+"</h"+size+"></a>");
             m.reset(text);
         }
 

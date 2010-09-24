@@ -54,9 +54,9 @@ public class WikiSyntaxParserHeadersTest {
                 "  * [[#test|Test]]\r\n" +
                 "      * [[#test_testing|testing]]\r\n" +
                 "</div>\r\n" +
-                "<a name=\"test\"/><h1>Test</h1>\r\n" +
+                "<a name=\"test\"><h1>Test</h1></a>\r\n" +
                 "test test\r\n" +
-                "<a name=\"test_testing\"/><h3>testing</h3>\r\n" +
+                "<a name=\"test_testing\"><h3>testing</h3></a>\r\n" +
                 "test";
         String result = instance.execute(text);
         System.out.println(expResult);
