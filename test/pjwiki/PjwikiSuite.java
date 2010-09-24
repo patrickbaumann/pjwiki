@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author Patrick
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({pjwiki.PjWikiViewTest.class,pjwiki.PjWikiAboutBoxTest.class,pjwiki.PjWikiAppTest.class,pjwiki.WikiWordTest.class,pjwiki.resources.ResourcesSuite.class})
+@Suite.SuiteClasses({pjwiki.WikiSyntaxParserFormattingTest.class,pjwiki.WikiWordTest.class,pjwiki.resources.ResourcesSuite.class})
 public class PjwikiSuite {
 
     @BeforeClass

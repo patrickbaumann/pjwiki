@@ -137,4 +137,5 @@ public class WikiWord {
     static String validWord = "[a-zA-Z][-a-zA-Z0-9_ ]*[a-zA-Z0-9]";
     static Pattern validWikiPath = Pattern.compile("^"+DELIMITER+"?("+validWord+DELIMITER+")*("+validWord+")"+DELIMITER+"?$");
     static Pattern relativeWikiPathFinder = Pattern.compile("^([.]{1,2}"+DELIMITER+")*(.*)$");
+    static Pattern invalidCharFinder = Pattern.compile("[^-a-zA-Z0-9 ]");
 }

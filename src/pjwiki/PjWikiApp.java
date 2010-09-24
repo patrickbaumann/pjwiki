@@ -4,17 +4,6 @@
 
 package pjwiki;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
@@ -23,55 +12,17 @@ import org.jdesktop.application.SingleFrameApplication;
  */
 public class PjWikiApp extends SingleFrameApplication {
 
-    @Override protected void initialize(String[] args)
-    {
-        // set default options
-        optionsPath = "./settings.conf";
-        launchWithWikiWord = null;
-        username = System.getProperty("user.name");
-
-        // parse command line arguments
-        for(int i = 0; i < args.length; i++)
-        {
-            if((args[i].contentEquals("-o") || args[i].contentEquals("--options"))
-                    && i+1 < args.length)
-            {
-                ++i;
-                optionsPath = args[i];
-            }
-            else if((args[i].contentEquals("-w") || args[i].contentEquals("--word"))
-                    && i+1 < args.length)
-            {
-                ++i;
-                launchWithWikiWord = new WikiWord(args[i]);
-            }
-            else if((args[i].contentEquals("-u") || args[i].contentEquals("--username"))
-                    && i+1 < args.length)
-            {
-                ++i;
-                username = args[i];
-            }
-        }
-    }
-
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
-        try {
-            loadSettings(optionsPath);
-            show(new PjWikiView(this, launchWithWikiWord));
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Launch issue: " + ex.getMessage());
-            this.exit();
-        }
+        show(new PjWikiView(this));
     }
 
     /**
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
-     * @param root
      */
     @Override protected void configureWindow(java.awt.Window root) {
     }
@@ -86,52 +37,8 @@ public class PjWikiApp extends SingleFrameApplication {
 
     /**
      * Main method launching the application.
-     * @param args
      */
     public static void main(String[] args) {
         launch(PjWikiApp.class, args);
     }
-
-    static Pattern dataPathPattern = Pattern.compile("^<datapath>([^<]+)</datapath>$");
-    /**
-     * 
-     * @param settingsFile
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ParseException
-     */
-    public void loadSettings(String settingsFile) throws FileNotFoundException, IOException, ParseException, Exception
-    {
-        BufferedReader in;
-        String line;
-
-        // Load target connections
-        in = new BufferedReader( new FileReader(settingsFile));
-        while(null != (line = in.readLine()))
-        {
-            Matcher m = dataPathPattern.matcher(line);
-            if(m.matches())
-            {
-                WikiWordFile.setDataRoot(new File(m.group(1)));
-            }
-        }
-        in.close();
-
-        if(WikiWordFile.getDataRoot() == null)
-        {
-            ParseException e = new ParseException("Settings file does not contain a datapath tag", 0);
-            throw e;
-        }
-    }
-
-    private String optionsPath;
-    private WikiWord launchWithWikiWord;
-
-    private String username;
-    public String getUsername() {
-        return username;
-    }
-
-    static List<WikiWord.WikiLink> linkList
-            = new ArrayList<WikiWord.WikiLink>();
 }
