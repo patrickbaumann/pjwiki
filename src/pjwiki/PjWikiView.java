@@ -11,21 +11,29 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URL;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.event.HyperlinkEvent;
+import javax.swing.text.StyledEditorKit;
 
 /**
  * The application's main frame.
  */
 public class PjWikiView extends FrameView {
 
-    public PjWikiView(SingleFrameApplication app) {
+    /**
+     *
+     * @param app
+     */
+    public PjWikiView(SingleFrameApplication app, WikiWord launchWithWikiWord) throws Exception {
         super(app);
+
+        if(launchWithWikiWord != null)
+        {
+            currentWikiWordFile = new WikiWordFile(launchWithWikiWord);
+        }
 
         initComponents();
 
@@ -84,6 +92,9 @@ public class PjWikiView extends FrameView {
         });
     }
 
+    /**
+     *
+     */
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
@@ -106,23 +117,23 @@ public class PjWikiView extends FrameView {
         mainPanel = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JToolBar.Separator();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jSeparator1 = new javax.swing.JToolBar.Separator();
-        jTextField2 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
+        contentTextPane = new javax.swing.JTextPane();
+        jToolBar1 = new javax.swing.JToolBar();
+        navBackButton = new javax.swing.JButton();
+        navLocationTextField1 = new javax.swing.JTextField();
+        navGoButton = new javax.swing.JButton();
+        navForwardButton = new javax.swing.JButton();
+        navEditSeparator = new javax.swing.JToolBar.Separator();
+        editButton = new javax.swing.JButton();
+        editSearchSeparator = new javax.swing.JToolBar.Separator();
+        searchTextField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        tocTextPane = new javax.swing.JTextPane();
         jToolBar2 = new javax.swing.JToolBar();
-        jButton2 = new javax.swing.JButton();
+        homeButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -136,88 +147,77 @@ public class PjWikiView extends FrameView {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        jSplitPane1.setDividerLocation(100);
-        jSplitPane1.setDividerSize(4);
-        jSplitPane1.setLastDividerLocation(150);
+        jSplitPane1.setDividerLocation(200);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        contentTextPane.setName("contentTextPane"); // NOI18N
+        jScrollPane1.setViewportView(contentTextPane);
+
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
         jToolBar1.setName("jToolBar1"); // NOI18N
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-28.png"))); // NOI18N
+        navBackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-28.png"))); // NOI18N
+        navBackButton.setFocusable(false);
+        navBackButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        navBackButton.setName("navBackButton"); // NOI18N
+        navBackButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(navBackButton);
+
+        navLocationTextField1.setName("navLocationTextField1"); // NOI18N
+        jToolBar1.add(navLocationTextField1);
+
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(pjwiki.PjWikiApp.class).getContext().getResourceMap(PjWikiView.class);
-        jButton1.setText(resourceMap.getString("jButtonNavigationBack.text")); // NOI18N
-        jButton1.setToolTipText(resourceMap.getString("jButtonNavigationBack.toolTipText")); // NOI18N
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setName("jButtonNavigationBack"); // NOI18N
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
-
-        jTextField1.setText(resourceMap.getString("jTextFieldNavigationLocation.text")); // NOI18N
-        jTextField1.setName("jTextFieldNavigationLocation"); // NOI18N
-        jToolBar1.add(jTextField1);
-
-        jButton3.setText(resourceMap.getString("jButtonNavigationGo.text")); // NOI18N
-        jButton3.setToolTipText(resourceMap.getString("jButtonNavigationGo.toolTipText")); // NOI18N
-        jButton3.setFocusable(false);
-        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton3.setName("jButtonNavigationGo"); // NOI18N
-        jButton3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton3);
-
-        jButton5.setIcon(resourceMap.getIcon("jButtonNavigationForward.icon")); // NOI18N
-        jButton5.setText(resourceMap.getString("jButtonNavigationForward.text")); // NOI18N
-        jButton5.setToolTipText(resourceMap.getString("jButtonNavigationForward.toolTipText")); // NOI18N
-        jButton5.setFocusable(false);
-        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton5.setName("jButtonNavigationForward"); // NOI18N
-        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton5);
-
-        jSeparator2.setName("jSeparator2"); // NOI18N
-        jToolBar1.add(jSeparator2);
-
-        jToggleButton1.setText(resourceMap.getString("jToggleButtonEditSave.text")); // NOI18N
-        jToggleButton1.setFocusable(false);
-        jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton1.setName("jToggleButtonEditSave"); // NOI18N
-        jToggleButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jToggleButton1);
-
-        jSeparator1.setName("jSeparator1"); // NOI18N
-        jToolBar1.add(jSeparator1);
-
-        jTextField2.setText(resourceMap.getString("jTextFieldSearch.text")); // NOI18N
-        jTextField2.setName("jTextFieldSearch"); // NOI18N
-        jToolBar1.add(jTextField2);
-
-        jButton4.setText(resourceMap.getString("jButtonSearch.text")); // NOI18N
-        jButton4.setFocusable(false);
-        jButton4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton4.setName("jButtonSearch"); // NOI18N
-        jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton4);
-
-        jPanel1.add(jToolBar1, java.awt.BorderLayout.PAGE_START);
-
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
-
-        jTextPane2.setContentType(resourceMap.getString("jTextPaneContent.contentType")); // NOI18N
-        jTextPane2.setEditable(false);
-        jTextPane2.setText(resourceMap.getString("jTextPaneContent.text")); // NOI18N
-        jTextPane2.setName("jTextPaneContent"); // NOI18N
-        jTextPane2.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
-                jTextPane2HyperlinkUpdate(evt);
+        navGoButton.setText(resourceMap.getString("navGoButton.text")); // NOI18N
+        navGoButton.setFocusable(false);
+        navGoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        navGoButton.setName("navGoButton"); // NOI18N
+        navGoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        navGoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                navGoButtonActionPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(jTextPane2);
+        jToolBar1.add(navGoButton);
 
-        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        navForwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-26.png"))); // NOI18N
+        navForwardButton.setFocusable(false);
+        navForwardButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        navForwardButton.setName("navForwardButton"); // NOI18N
+        navForwardButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(navForwardButton);
+
+        navEditSeparator.setName("navEditSeparator"); // NOI18N
+        jToolBar1.add(navEditSeparator);
+
+        editButton.setText(resourceMap.getString("editButton.text")); // NOI18N
+        editButton.setFocusable(false);
+        editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editButton.setName("editButton"); // NOI18N
+        editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(editButton);
+
+        editSearchSeparator.setName("editSearchSeparator"); // NOI18N
+        jToolBar1.add(editSearchSeparator);
+
+        searchTextField.setName("searchTextField"); // NOI18N
+        jToolBar1.add(searchTextField);
+
+        searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
+        searchButton.setFocusable(false);
+        searchButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        searchButton.setName("searchButton"); // NOI18N
+        searchButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(searchButton);
+
+        jPanel1.add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane1.setRightComponent(jPanel1);
 
@@ -226,24 +226,20 @@ public class PjWikiView extends FrameView {
 
         jScrollPane2.setName("jScrollPane2"); // NOI18N
 
-        jTextPane1.setContentType(resourceMap.getString("jTextPaneToc.contentType")); // NOI18N
-        jTextPane1.setEditable(false);
-        jTextPane1.setName("jTextPaneToc"); // NOI18N
-        jScrollPane2.setViewportView(jTextPane1);
+        tocTextPane.setName("tocTextPane"); // NOI18N
+        jScrollPane2.setViewportView(tocTextPane);
 
         jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
         jToolBar2.setRollover(true);
         jToolBar2.setName("jToolBar2"); // NOI18N
 
-        jButton2.setIcon(resourceMap.getIcon("jButton2.icon")); // NOI18N
-        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
-        jButton2.setToolTipText(resourceMap.getString("jButton2.toolTipText")); // NOI18N
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jButton2.setName("jButton2"); // NOI18N
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(jButton2);
+        homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-0.png"))); // NOI18N
+        homeButton.setFocusable(false);
+        homeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        homeButton.setName("homeButton"); // NOI18N
+        homeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar2.add(homeButton);
 
         jPanel2.add(jToolBar2, java.awt.BorderLayout.PAGE_START);
 
@@ -253,11 +249,11 @@ public class PjWikiView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -296,11 +292,11 @@ public class PjWikiView extends FrameView {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(statusPanelSeparator, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+            .add(statusPanelSeparator, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
             .add(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(statusMessageLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 480, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 528, Short.MAX_VALUE)
                 .add(progressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusAnimationLabel)
@@ -323,41 +319,58 @@ public class PjWikiView extends FrameView {
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextPane2HyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_jTextPane2HyperlinkUpdate
-        if(evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
+    private void navGoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navGoButtonActionPerformed
+        if(contentTextPane.getContentType().contentEquals("text/html"))
         {
-            URL temp = evt.getURL();
-            JOptionPane.showMessageDialog(jTextPane1, "Link clicked: "+temp.toString());
+            try{
+                contentTextPane.setEditorKit(new StyledEditorKit());
+                contentTextPane.setEditable(true);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            }
         }
-
-    }//GEN-LAST:event_jTextPane2HyperlinkUpdate
+        else
+        {
+            try{
+                WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
+                String text = "<html><head></head><body>"+w.execute(contentTextPane.getText())+"</body></html>";
+                //contentTextPane.setContentType("text/html");
+                contentTextPane.setEditable(false);
+                contentTextPane.setContentType("text/html");
+                contentTextPane.setText(text);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            }
+        }
+        contentTextPane.revalidate();
+    }//GEN-LAST:event_navGoButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JTextPane contentTextPane;
+    private javax.swing.JButton editButton;
+    private javax.swing.JToolBar.Separator editSearchSeparator;
+    private javax.swing.JButton homeButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JToolBar.Separator jSeparator1;
-    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JButton navBackButton;
+    private javax.swing.JToolBar.Separator navEditSeparator;
+    private javax.swing.JButton navForwardButton;
+    private javax.swing.JButton navGoButton;
+    private javax.swing.JTextField navLocationTextField1;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTextField;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JTextPane tocTextPane;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
@@ -367,4 +380,5 @@ public class PjWikiView extends FrameView {
     private int busyIconIndex = 0;
 
     private JDialog aboutBox;
+    private WikiWordFile currentWikiWordFile;
 }
