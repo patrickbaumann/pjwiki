@@ -10,12 +10,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="0" pref="652" max="32767" attributes="0"/>
+              <Component id="jSplitPane1" alignment="0" pref="596" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="0" pref="535" max="32767" attributes="0"/>
+              <Component id="jSplitPane1" alignment="0" pref="539" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -57,6 +57,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JTextPane" name="contentTextPane">
                       <Properties>
+                        <Property name="doubleBuffered" type="boolean" value="true"/>
                         <Property name="name" type="java.lang.String" value="contentTextPane" noResource="true"/>
                       </Properties>
                     </Component>
@@ -66,8 +67,17 @@
                   <Properties>
                     <Property name="floatable" type="boolean" value="false"/>
                     <Property name="rollover" type="boolean" value="true"/>
+                    <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                      <Color id="Default Cursor"/>
+                    </Property>
                     <Property name="name" type="java.lang.String" value="jToolBar1" noResource="true"/>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[446, 52]"/>
+                    </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="componentRemoved" listener="java.awt.event.ContainerListener" parameters="java.awt.event.ContainerEvent" handler="jToolBar1ComponentRemoved"/>
+                  </Events>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
                       <BorderConstraints direction="First"/>
@@ -76,78 +86,129 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JButton" name="navBackButton">
+                    <Container class="javax.swing.JPanel" name="jPanel3">
                       <Properties>
-                        <Property name="icon" type="javax.swing.Icon" noResource="true" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/pjwiki/resources/icons16/onebit_50-28.png"/>
+                        <Property name="name" type="java.lang.String" value="jPanel3" noResource="true"/>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[444, 25]"/>
                         </Property>
-                        <Property name="focusable" type="boolean" value="false"/>
-                        <Property name="horizontalTextPosition" type="int" value="0"/>
-                        <Property name="name" type="java.lang.String" value="navBackButton" noResource="true"/>
-                        <Property name="verticalTextPosition" type="int" value="3"/>
                       </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="navLocationTextField1">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="navLocationTextField1" noResource="true"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="navGoButton">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" resourceKey="navGoButton.text"/>
-                        <Property name="focusable" type="boolean" value="false"/>
-                        <Property name="horizontalTextPosition" type="int" value="0"/>
-                        <Property name="name" type="java.lang.String" value="navGoButton" noResource="true"/>
-                        <Property name="verticalTextPosition" type="int" value="3"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="navGoButtonActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="navForwardButton">
-                      <Properties>
-                        <Property name="icon" type="javax.swing.Icon" noResource="true" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/pjwiki/resources/icons16/onebit_50-26.png"/>
-                        </Property>
-                        <Property name="focusable" type="boolean" value="false"/>
-                        <Property name="horizontalTextPosition" type="int" value="0"/>
-                        <Property name="name" type="java.lang.String" value="navForwardButton" noResource="true"/>
-                        <Property name="verticalTextPosition" type="int" value="3"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JToolBar$Separator" name="navEditSeparator">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="navEditSeparator" noResource="true"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="editButton">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" resourceKey="editButton.text"/>
-                        <Property name="focusable" type="boolean" value="false"/>
-                        <Property name="horizontalTextPosition" type="int" value="0"/>
-                        <Property name="name" type="java.lang.String" value="editButton" noResource="true"/>
-                        <Property name="verticalTextPosition" type="int" value="3"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JToolBar$Separator" name="editSearchSeparator">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="editSearchSeparator" noResource="true"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="searchTextField">
-                      <Properties>
-                        <Property name="name" type="java.lang.String" value="searchTextField" noResource="true"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="searchButton">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" resourceKey="searchButton.text"/>
-                        <Property name="focusable" type="boolean" value="false"/>
-                        <Property name="horizontalTextPosition" type="int" value="0"/>
-                        <Property name="name" type="java.lang.String" value="searchButton" noResource="true"/>
-                        <Property name="verticalTextPosition" type="int" value="3"/>
-                      </Properties>
-                    </Component>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
+                        <Property name="columns" type="int" value="0"/>
+                        <Property name="rows" type="int" value="2"/>
+                      </Layout>
+                      <SubComponents>
+                        <Container class="javax.swing.JPanel" name="jPanel4">
+                          <Properties>
+                            <Property name="name" type="java.lang.String" value="jPanel4" noResource="true"/>
+                          </Properties>
+
+                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                          <SubComponents>
+                            <Component class="javax.swing.JButton" name="navBackButton">
+                              <Properties>
+                                <Property name="icon" type="javax.swing.Icon" noResource="true" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                  <Image iconType="3" name="/pjwiki/resources/icons16/onebit_50-28.png"/>
+                                </Property>
+                                <Property name="focusable" type="boolean" value="false"/>
+                                <Property name="horizontalTextPosition" type="int" value="0"/>
+                                <Property name="name" type="java.lang.String" value="navBackButton" noResource="true"/>
+                                <Property name="verticalTextPosition" type="int" value="3"/>
+                              </Properties>
+                            </Component>
+                            <Component class="javax.swing.JTextField" name="navLocationTextField1">
+                              <Properties>
+                                <Property name="name" type="java.lang.String" value="navLocationTextField1" noResource="true"/>
+                              </Properties>
+                            </Component>
+                            <Component class="javax.swing.JButton" name="navGoButton">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" resourceKey="navGoButton.text"/>
+                                <Property name="focusable" type="boolean" value="false"/>
+                                <Property name="horizontalTextPosition" type="int" value="0"/>
+                                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                  <Dimension value="[30, 23]"/>
+                                </Property>
+                                <Property name="name" type="java.lang.String" value="navGoButton" noResource="true"/>
+                                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                  <Dimension value="[45, 23]"/>
+                                </Property>
+                                <Property name="verticalTextPosition" type="int" value="3"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="navGoButtonActionPerformed"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JButton" name="navForwardButton">
+                              <Properties>
+                                <Property name="icon" type="javax.swing.Icon" noResource="true" editor="org.netbeans.modules.form.editors2.IconEditor">
+                                  <Image iconType="3" name="/pjwiki/resources/icons16/onebit_50-26.png"/>
+                                </Property>
+                                <Property name="focusable" type="boolean" value="false"/>
+                                <Property name="horizontalTextPosition" type="int" value="0"/>
+                                <Property name="name" type="java.lang.String" value="navForwardButton" noResource="true"/>
+                                <Property name="verticalTextPosition" type="int" value="3"/>
+                              </Properties>
+                            </Component>
+                            <Component class="javax.swing.JToolBar$Separator" name="navEditSeparator">
+                              <Properties>
+                                <Property name="name" type="java.lang.String" value="navEditSeparator" noResource="true"/>
+                              </Properties>
+                            </Component>
+                            <Component class="javax.swing.JButton" name="editButton">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" resourceKey="editButton.text"/>
+                                <Property name="focusable" type="boolean" value="false"/>
+                                <Property name="horizontalTextPosition" type="int" value="0"/>
+                                <Property name="name" type="java.lang.String" value="editButton" noResource="true"/>
+                                <Property name="verticalTextPosition" type="int" value="3"/>
+                              </Properties>
+                              <Events>
+                                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editButtonActionPerformed"/>
+                              </Events>
+                            </Component>
+                            <Component class="javax.swing.JToolBar$Separator" name="editSearchSeparator">
+                              <Properties>
+                                <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                  <Dimension value="[6, 0]"/>
+                                </Property>
+                                <Property name="name" type="java.lang.String" value="editSearchSeparator" noResource="true"/>
+                              </Properties>
+                            </Component>
+                            <Component class="javax.swing.JTextField" name="searchTextField">
+                              <Properties>
+                                <Property name="name" type="java.lang.String" value="searchTextField" noResource="true"/>
+                              </Properties>
+                            </Component>
+                            <Component class="javax.swing.JButton" name="searchButton">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" resourceKey="searchButton.text"/>
+                                <Property name="focusable" type="boolean" value="false"/>
+                                <Property name="horizontalTextPosition" type="int" value="0"/>
+                                <Property name="name" type="java.lang.String" value="searchButton" noResource="true"/>
+                                <Property name="verticalTextPosition" type="int" value="3"/>
+                              </Properties>
+                            </Component>
+                          </SubComponents>
+                        </Container>
+                        <Container class="javax.swing.JPanel" name="jPanel5">
+                          <Properties>
+                            <Property name="name" type="java.lang.String" value="jPanel5" noResource="true"/>
+                          </Properties>
+
+                          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+                          <SubComponents>
+                            <Component class="javax.swing.JButton" name="jButton1">
+                              <Properties>
+                                <Property name="text" type="java.lang.String" resourceKey="previewButton.text"/>
+                                <Property name="name" type="java.lang.String" value="previewButton" noResource="true"/>
+                              </Properties>
+                            </Component>
+                          </SubComponents>
+                        </Container>
+                      </SubComponents>
+                    </Container>
                   </SubComponents>
                 </Container>
               </SubComponents>
@@ -188,6 +249,7 @@
                 </Container>
                 <Container class="javax.swing.JToolBar" name="jToolBar2">
                   <Properties>
+                    <Property name="floatable" type="boolean" value="false"/>
                     <Property name="rollover" type="boolean" value="true"/>
                     <Property name="name" type="java.lang.String" value="jToolBar2" noResource="true"/>
                   </Properties>
@@ -289,7 +351,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusMessageLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="528" max="32767" attributes="0"/>
+                  <EmptySpace pref="482" max="32767" attributes="0"/>
                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="statusAnimationLabel" min="-2" max="-2" attributes="0"/>

@@ -4,6 +4,8 @@
 
 package pjwiki;
 
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -90,6 +92,9 @@ public class PjWikiView extends FrameView {
                 }
             }
         });
+        currentText = "Testing";
+        wikiSyntaxManager = new WikiSyntaxManager();
+        setEditState(state.VIEW);
     }
 
     /**
@@ -120,6 +125,8 @@ public class PjWikiView extends FrameView {
         jScrollPane1 = new javax.swing.JScrollPane();
         contentTextPane = new javax.swing.JTextPane();
         jToolBar1 = new javax.swing.JToolBar();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         navBackButton = new javax.swing.JButton();
         navLocationTextField1 = new javax.swing.JTextField();
         navGoButton = new javax.swing.JButton();
@@ -129,6 +136,8 @@ public class PjWikiView extends FrameView {
         editSearchSeparator = new javax.swing.JToolBar.Separator();
         searchTextField = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tocTextPane = new javax.swing.JTextPane();
@@ -155,6 +164,7 @@ public class PjWikiView extends FrameView {
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
 
+        contentTextPane.setDoubleBuffered(true);
         contentTextPane.setName("contentTextPane"); // NOI18N
         jScrollPane1.setViewportView(contentTextPane);
 
@@ -162,60 +172,95 @@ public class PjWikiView extends FrameView {
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
+        jToolBar1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jToolBar1.setName("jToolBar1"); // NOI18N
+        jToolBar1.setPreferredSize(new java.awt.Dimension(446, 52));
+        jToolBar1.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentRemoved(java.awt.event.ContainerEvent evt) {
+                jToolBar1ComponentRemoved(evt);
+            }
+        });
+
+        jPanel3.setName("jPanel3"); // NOI18N
+        jPanel3.setPreferredSize(new java.awt.Dimension(444, 25));
+        jPanel3.setLayout(new java.awt.GridLayout(2, 0));
+
+        jPanel4.setName("jPanel4"); // NOI18N
+        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
         navBackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-28.png"))); // NOI18N
         navBackButton.setFocusable(false);
         navBackButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         navBackButton.setName("navBackButton"); // NOI18N
         navBackButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(navBackButton);
+        jPanel4.add(navBackButton);
 
         navLocationTextField1.setName("navLocationTextField1"); // NOI18N
-        jToolBar1.add(navLocationTextField1);
+        jPanel4.add(navLocationTextField1);
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(pjwiki.PjWikiApp.class).getContext().getResourceMap(PjWikiView.class);
         navGoButton.setText(resourceMap.getString("navGoButton.text")); // NOI18N
         navGoButton.setFocusable(false);
         navGoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        navGoButton.setMinimumSize(new java.awt.Dimension(30, 23));
         navGoButton.setName("navGoButton"); // NOI18N
+        navGoButton.setPreferredSize(new java.awt.Dimension(45, 23));
         navGoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         navGoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 navGoButtonActionPerformed(evt);
             }
         });
-        jToolBar1.add(navGoButton);
+        jPanel4.add(navGoButton);
 
         navForwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-26.png"))); // NOI18N
         navForwardButton.setFocusable(false);
         navForwardButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         navForwardButton.setName("navForwardButton"); // NOI18N
         navForwardButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(navForwardButton);
+        jPanel4.add(navForwardButton);
 
         navEditSeparator.setName("navEditSeparator"); // NOI18N
-        jToolBar1.add(navEditSeparator);
+        jPanel4.add(navEditSeparator);
 
         editButton.setText(resourceMap.getString("editButton.text")); // NOI18N
         editButton.setFocusable(false);
         editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         editButton.setName("editButton"); // NOI18N
         editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(editButton);
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+        jPanel4.add(editButton);
 
+        editSearchSeparator.setMaximumSize(new java.awt.Dimension(6, 0));
         editSearchSeparator.setName("editSearchSeparator"); // NOI18N
-        jToolBar1.add(editSearchSeparator);
+        jPanel4.add(editSearchSeparator);
 
         searchTextField.setName("searchTextField"); // NOI18N
-        jToolBar1.add(searchTextField);
+        jPanel4.add(searchTextField);
 
         searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
         searchButton.setFocusable(false);
         searchButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchButton.setName("searchButton"); // NOI18N
         searchButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(searchButton);
+        jPanel4.add(searchButton);
+
+        jPanel3.add(jPanel4);
+
+        jPanel5.setName("jPanel5"); // NOI18N
+        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
+
+        jButton1.setText(resourceMap.getString("previewButton.text")); // NOI18N
+        jButton1.setName("previewButton"); // NOI18N
+        jPanel5.add(jButton1);
+
+        jPanel3.add(jPanel5);
+
+        jToolBar1.add(jPanel3);
 
         jPanel1.add(jToolBar1, java.awt.BorderLayout.PAGE_START);
 
@@ -231,6 +276,7 @@ public class PjWikiView extends FrameView {
 
         jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
+        jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
         jToolBar2.setName("jToolBar2"); // NOI18N
 
@@ -249,11 +295,11 @@ public class PjWikiView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -296,7 +342,7 @@ public class PjWikiView extends FrameView {
             .add(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(statusMessageLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 528, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 482, Short.MAX_VALUE)
                 .add(progressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusAnimationLabel)
@@ -320,39 +366,33 @@ public class PjWikiView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void navGoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navGoButtonActionPerformed
-        if(contentTextPane.getContentType().contentEquals("text/html"))
-        {
-            try{
-                contentTextPane.setEditorKit(new StyledEditorKit());
-                contentTextPane.setEditable(true);
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
-            }
-        }
-        else
-        {
-            try{
-                WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
-                WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
-                String text = "<html><head></head><body>"+w2.execute(w.execute(contentTextPane.getText()))+"</body></html>";
-                //contentTextPane.setContentType("text/html");
-                contentTextPane.setEditable(false);
-                contentTextPane.setContentType("text/html");
-                contentTextPane.setText(text);
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
-            }
-        }
-        contentTextPane.revalidate();
+
     }//GEN-LAST:event_navGoButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        if(editState == state.VIEW)
+        {
+            setEditState(state.EDIT);
+        }else{
+            setEditState(state.VIEW);
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void jToolBar1ComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jToolBar1ComponentRemoved
+
+    }//GEN-LAST:event_jToolBar1ComponentRemoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane contentTextPane;
     private javax.swing.JButton editButton;
     private javax.swing.JToolBar.Separator editSearchSeparator;
     private javax.swing.JButton homeButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
@@ -374,6 +414,73 @@ public class PjWikiView extends FrameView {
     private javax.swing.JTextPane tocTextPane;
     // End of variables declaration//GEN-END:variables
 
+    private void renderText()
+    {
+        if(contentTextPane.getContentType().contentEquals("text/html") && editState == state.EDIT)
+        {
+            try{
+                contentTextPane.setEditorKit(new StyledEditorKit());
+                contentTextPane.setEditable(true);
+                contentTextPane.setText(currentText);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            }
+        }
+        else
+        {
+            try{
+                WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
+                WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
+                String text = "<html><head></head><body>"+wikiSyntaxManager.format(currentText)+"</body></html>";
+                //contentTextPane.setContentType("text/html");
+                contentTextPane.setEditable(false);
+                contentTextPane.setContentType("text/html");
+                contentTextPane.setText(text);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            }
+        }
+        contentTextPane.revalidate();
+    }
+
+    private void setEditState(state s)
+    {
+        GridLayout l = (GridLayout)jPanel3.getLayout();
+        Dimension d = jToolBar1.getPreferredSize();
+        if(s == state.VIEW)
+        {
+            if(jPanel5.getParent() != null)
+            {
+                jPanel3.remove(jPanel5);
+            }
+            d.height = 27;
+            l.setRows(1);
+        }
+        else if(s == state.PREVIEW || s == state.EDIT )
+        {
+            l.setRows(2);
+            d.height = 52;
+            if(jPanel5.getParent() == null)
+            {
+                jPanel3.add(jPanel5);
+            }
+        }
+
+        if((s== state.PREVIEW || s == state.VIEW) && editState == state.EDIT)
+        {
+            currentText = contentTextPane.getText();
+        }else{
+            contentTextPane.setText(currentText);
+        }
+        editState = s;
+
+        renderText();
+
+        jToolBar1.setPreferredSize(d);
+        jPanel1.revalidate();
+        jPanel1.repaint();
+    }
+
     private final Timer messageTimer;
     private final Timer busyIconTimer;
     private final Icon idleIcon;
@@ -382,4 +489,14 @@ public class PjWikiView extends FrameView {
 
     private JDialog aboutBox;
     private WikiWordFile currentWikiWordFile;
+    enum state{
+        VIEW,
+        EDIT,
+        PREVIEW;
+    }
+    private state editState;
+
+    private String currentText;
+
+    private WikiSyntaxManager wikiSyntaxManager;
 }
