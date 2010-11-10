@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  *
  * @author aq615c
  */
-public class WikiSyntaxParserHeaders extends WikiSyntaxParser{
+public class WikiSyntaxParserHeaders extends WikiSyntaxParserBase{
     public WikiSyntaxParserHeaders()
     {
         headerRoot = new headerNode("",0);

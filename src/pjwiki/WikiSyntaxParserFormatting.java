@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  *
  * @author Patrick
  */
-public class WikiSyntaxParserFormatting extends WikiSyntaxParser{
+public class WikiSyntaxParserFormatting extends WikiSyntaxParserBase{
     @Override
     public String execute(String text)
     {
@@ -35,6 +35,15 @@ public class WikiSyntaxParserFormatting extends WikiSyntaxParser{
         matcher.usePattern(strike);
         text = matcher.replaceAll(strikeReplace);
 
+        //strike through
+        matcher.reset(text);
+        matcher.usePattern(monospace);
+        text = matcher.replaceAll(monospaceReplace);
+
+        matcher.reset(text);
+        matcher.usePattern(linebreak);
+        text = matcher.replaceAll(linebreakReplace);
+
         return text;
     }
 
@@ -50,8 +59,10 @@ public class WikiSyntaxParserFormatting extends WikiSyntaxParser{
     private static Pattern strike = Pattern.compile("--(.+?)--");
     private static String strikeReplace = "<strike>$1</strike>";
 
-    // TODO: ''monospaced'' => <pre>monospaced</pre>
-    //private static Pattern stuff = Pattern.compile("");
-    //private static Pattern strike = Pattern.compile("");
+    private static Pattern monospace = Pattern.compile("''(.+?)''", Pattern.DOTALL);
+    private static String monospaceReplace = "<pre>$1</pre>";
+
+    private static Pattern linebreak = Pattern.compile("\\\\\\\\\\s+");
+    private static String linebreakReplace = "<br />";
 
 }

@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Patrick
  */
-public class WikiSyntaxParserTables extends WikiSyntaxParser{
+public class WikiSyntaxParserTables extends WikiSyntaxParserBase{
     @Override
     public String execute(String text)
     {

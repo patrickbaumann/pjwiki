@@ -72,7 +72,6 @@ public class WikiSyntaxParserFormattingTest {
 
     @Test
     public void testStrike() {
-        System.out.println("execute");
         String text = "This --is-- a test.";
         WikiSyntaxParserFormatting instance = new WikiSyntaxParserFormatting();
         String expResult =
@@ -82,8 +81,33 @@ public class WikiSyntaxParserFormattingTest {
     }
 
     @Test
+    public void testManualLineBreak() {
+        String text =
+                "I want a new line\\\\ and stuff\r\n" +
+                "This should end up as three lines\r\n";
+        WikiSyntaxParserFormatting instance = new WikiSyntaxParserFormatting();
+        String expResult =
+                "I want a new line<br />and stuff\r\n" +
+                "This should end up as three lines\r\n";
+        String result = instance.execute(text);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testMonospaced() {
+        String text =
+                "I want ''a new line and'' ''stuff\r\n" +
+                "This should end up'' as three lines\r\n";
+        WikiSyntaxParserFormatting instance = new WikiSyntaxParserFormatting();
+        String expResult =
+                "I want <pre>a new line and</pre> <pre>stuff\r\n" +
+                "This should end up</pre> as three lines\r\n";
+        String result = instance.execute(text);
+        assertEquals(expResult, result);
+    }
+
+    @Test
     public void testAll() {
-        System.out.println("execute");
         String text = "This --is-- a **test** and //stuff// and __things__.";
         WikiSyntaxParserFormatting instance = new WikiSyntaxParserFormatting();
         String expResult =
@@ -94,7 +118,6 @@ public class WikiSyntaxParserFormattingTest {
 
     @Test
     public void testMix() {
-        System.out.println("execute");
         String text = "This **is a //test of** mixing//.";
         WikiSyntaxParserFormatting instance = new WikiSyntaxParserFormatting();
         String expResult =

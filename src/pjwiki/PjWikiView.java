@@ -175,7 +175,6 @@ public class PjWikiView extends FrameView {
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
-        jToolBar1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jToolBar1.setName("jToolBar1"); // NOI18N
         jToolBar1.setPreferredSize(new java.awt.Dimension(446, 52));
         jToolBar1.addContainerListener(new java.awt.event.ContainerAdapter() {
@@ -207,7 +206,6 @@ public class PjWikiView extends FrameView {
         navGoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         navGoButton.setMinimumSize(new java.awt.Dimension(30, 23));
         navGoButton.setName("navGoButton"); // NOI18N
-        navGoButton.setPreferredSize(new java.awt.Dimension(45, 23));
         navGoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         navGoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -298,11 +296,11 @@ public class PjWikiView extends FrameView {
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -345,7 +343,7 @@ public class PjWikiView extends FrameView {
             .add(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(statusMessageLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 482, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 528, Short.MAX_VALUE)
                 .add(progressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusAnimationLabel)
@@ -374,7 +372,7 @@ public class PjWikiView extends FrameView {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         if(editState == state.VIEW)
-        {
+        { 
             setEditState(state.EDIT);
         }else{
             setEditState(state.VIEW);

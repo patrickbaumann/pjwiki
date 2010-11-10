@@ -49,26 +49,91 @@ public class WikiSyntaxParserListsTest {
                 "    * list2" + "\r\n" +
                 "    * list3" + "\r\n" +
                 "  * list4" + "\r\n" +
-                "      *list 5" + "\r\n" +
+                "      * list 5" + "\r\n" +
                 "[[blah]]" + "\r\n";
         WikiSyntaxParserLists instance = new WikiSyntaxParserLists();
         String expResult = 
                 "** bold stuff **" + "\r\n" +
-                "<ul>" +
-                "  <li>list1" + "\r\n" +
+                "<ul>" + "\r\n" +
+                "  <li>list1</li>" + "\r\n" +
                 "  <ul>" + "\r\n" +
                 "    <li>list2</li>" + "\r\n" +
                 "    <li>list3</li>" + "\r\n" +
-                "    <li>list4" + "\r\n" +
+                "  </ul>" + "\r\n" +
+                "  <li>list4</li>" + "\r\n" +
+                "  <ul>" + "\r\n" +
                 "    <ul>" + "\r\n" +
                 "      <li>list 5</li>" + "\r\n" +
                 "    </ul>" + "\r\n" +
-                "    </li>" + "\r\n" +
-                "  </li>" + "\r\n" +
+                "  </ul>" + "\r\n" +
                 "</ul>" + "\r\n" +
                 "[[blah]]" + "\r\n";
         String result = instance.execute(text);
         assertEquals(expResult, result);
     }
+    public void testExecuteBasicOlList() {
+        System.out.println("execute");
+        String text =
+                "** bold stuff **" + "\r\n" +
+                "  - list1" + "\r\n" +
+                "    - list2" + "\r\n" +
+                "    - list3" + "\r\n" +
+                "  - list4" + "\r\n" +
+                "      - list 5" + "\r\n" +
+                "[[blah]]" + "\r\n";
+        WikiSyntaxParserLists instance = new WikiSyntaxParserLists();
+        String expResult =
+                "** bold stuff **" + "\r\n" +
+                "<ol>" + "\r\n" +
+                "  <li>list1</li>" + "\r\n" +
+                "  <ol>" + "\r\n" +
+                "    <li>list2</li>" + "\r\n" +
+                "    <li>list3</li>" + "\r\n" +
+                "  </ol>" + "\r\n" +
+                "  <li>list4</li>" + "\r\n" +
+                "  <ol>" + "\r\n" +
+                "    <ol>" + "\r\n" +
+                "      <li>list 5</li>" + "\r\n" +
+                "    </ol>" + "\r\n" +
+                "  </ol>" + "\r\n" +
+                "</ol>" + "\r\n" +
+                "[[blah]]" + "\r\n";
+        String result = instance.execute(text);
+        assertEquals(expResult, result);
+    }
 
+    public void testExecuteEmbeddedDiffLists() {
+        System.out.println("execute");
+        String text =
+                "** bold stuff **" + "\r\n" +
+                "  * list1" + "\r\n" +
+                "    - list2" + "\r\n" +
+                "    - list3" + "\r\n" +
+                "  * list4" + "\r\n" +
+                "      * list 5" + "\r\n" +
+                "[[blah]]" + "\r\n";
+        WikiSyntaxParserLists instance = new WikiSyntaxParserLists();
+        String expResult =
+                "** bold stuff **" + "\r\n" +
+                "<ul>" + "\r\n" +
+                "  <li>list1</li>" + "\r\n" +
+                "</ul>" + "\r\n" +
+                "<ol>" + "\r\n" +
+                "  <ol>" + "\r\n" +
+                "    <li>list2</li>" + "\r\n" +
+                "    <li>list3</li>" + "\r\n" +
+                "  </ol>" + "\r\n" +
+                "</ol>" + "\r\n" +
+                "<ul>" + "\r\n" +
+                "  <li>list4</li>" + "\r\n" +
+                "  <ul>" + "\r\n" +
+                "    <ul>" + "\r\n" +
+                "      <li>list 5</li>" + "\r\n" +
+                "    </ul>" + "\r\n" +
+                "  </ul>" + "\r\n" +
+                "</ul>" + "\r\n" +
+                "[[blah]]" + "\r\n";
+        String result = instance.execute(text);
+        assertEquals(expResult, result);
+    }
 }

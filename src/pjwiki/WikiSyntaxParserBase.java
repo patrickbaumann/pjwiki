@@ -5,11 +5,13 @@
 
 package pjwiki;
 
+import java.util.List;
+
 /**
  *
  * @author Patrick
  */
-public class WikiSyntaxParser {
+public class WikiSyntaxParserBase {
     public String prepare(String text)
     {
         // Default class, do nothing

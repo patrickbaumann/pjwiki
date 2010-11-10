@@ -16,7 +16,7 @@ import java.util.ListIterator;
 public class WikiSyntaxManager {
     public WikiSyntaxManager()
     {
-        parsers = new ArrayList<WikiSyntaxParser>();
+        parsers = new ArrayList<WikiSyntaxParserBase>();
 
         parsers.add(new WikiSyntaxParserHeaders());
         parsers.add(new WikiSyntaxParserFormatting());
@@ -27,13 +27,12 @@ public class WikiSyntaxManager {
         // TODO: Parser for macros
         // TODO: Wishlist: JRuby interpreter integration and ability to use ruby to add custom parsers
         // TODO: Images
-        // TODO: Code, nowiki and html parsers (look into https://jhighlight.dev.java.net/ for code highlighting)
-        // TODO: Forced newlines: \\<sp> => <br />
+        // TODO: Code parser (look into https://jhighlight.dev.java.net/ for code highlighting)
     }
 
     public String format(String text)
     {
-        ListIterator<WikiSyntaxParser> i = parsers.listIterator();
+        ListIterator<WikiSyntaxParserBase> i = parsers.listIterator();
 
         while(i.hasNext())
         {
@@ -46,5 +45,5 @@ public class WikiSyntaxManager {
         return text;
     }
 
-    private List<WikiSyntaxParser> parsers;
+    private List<WikiSyntaxParserBase> parsers;
 }
