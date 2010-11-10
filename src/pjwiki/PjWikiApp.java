@@ -18,6 +18,10 @@ import javax.swing.JOptionPane;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
+//TODO: add all syntax options to task list: http://www.dokuwiki.org/syntax
+
+//TODO: Use sqlite3 or similar for link caching
+
 /**
  * The main class of the application.
  */

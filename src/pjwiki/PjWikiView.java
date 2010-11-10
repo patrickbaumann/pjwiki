@@ -25,6 +25,9 @@ import javax.swing.text.StyledEditorKit;
  */
 public class PjWikiView extends FrameView {
 
+    // TODO: Look into alternative html renderer. Mozilla's mayhaps? How about the chrome engine?
+
+
     /**
      *
      * @param app

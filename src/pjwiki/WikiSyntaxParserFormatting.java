@@ -49,6 +49,8 @@ public class WikiSyntaxParserFormatting extends WikiSyntaxParser{
 
     private static Pattern strike = Pattern.compile("--(.+?)--");
     private static String strikeReplace = "<strike>$1</strike>";
+
+    // TODO: ''monospaced'' => <pre>monospaced</pre>
     //private static Pattern stuff = Pattern.compile("");
     //private static Pattern strike = Pattern.compile("");
 

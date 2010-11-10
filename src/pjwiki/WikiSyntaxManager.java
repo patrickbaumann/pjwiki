@@ -20,6 +20,15 @@ public class WikiSyntaxManager {
 
         parsers.add(new WikiSyntaxParserHeaders());
         parsers.add(new WikiSyntaxParserFormatting());
+        parsers.add(new WikiSyntaxParserLists());
+        parsers.add(new WikiSyntaxParserTables());
+
+        // TODO: WikiLinks Internal, External
+        // TODO: Parser for macros
+        // TODO: Wishlist: JRuby interpreter integration and ability to use ruby to add custom parsers
+        // TODO: Images
+        // TODO: Code, nowiki and html parsers (look into https://jhighlight.dev.java.net/ for code highlighting)
+        // TODO: Forced newlines: \\<sp> => <br />
     }
 
     public String format(String text)
