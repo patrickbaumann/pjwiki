@@ -6,9 +6,7 @@
 package pjwiki;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -129,10 +127,46 @@ public class WikiWord {
         return filePath;
     }
 
-    static char DELIMITER = ':';
-    static String INDEX_TEXT = "index";
-    static String validWord = "[a-zA-Z][-a-zA-Z0-9_ ]*[a-zA-Z0-9]";
-    static Pattern validWikiPath = Pattern.compile("^"+DELIMITER+"?("+validWord+DELIMITER+")*("+validWord+")"+DELIMITER+"?$");
-    static Pattern relativeWikiPathFinder = Pattern.compile("^([.]{1,2}"+DELIMITER+")*(.*)$");
-    static Pattern invalidCharFinder = Pattern.compile("[^-a-zA-Z0-9 ]");
+    public String name()
+    {
+        return wikiPath.get(wikiPath.size()-1);
+    }
+
+    // caching
+    public void cacheAdd()
+    {
+        if(!existingWords.contains(this)) existingWords.add(this);
+    }
+    public void cacheRemove()
+    {
+        if(existingWords.contains(this)) existingWords.remove(this);
+    }
+    public boolean cacheExists()
+    {
+        return existingWords.contains(this);
+    }
+
+    @Override
+    public boolean equals(Object other)
+    {
+        return other != null && other.getClass() == WikiWord.class && ((WikiWord) other).toString().compareTo(this.toString()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + (this.wikiPath != null ? this.wikiPath.hashCode() : 0);
+        return hash;
+    }
+
+    private static List<WikiWord> existingWords = new ArrayList<WikiWord>();
+
+    public static char DELIMITER = ':';
+    public static String INDEX_TEXT = "index";
+    public static String validWord = "[a-zA-Z][-a-zA-Z0-9_ ]*[a-zA-Z0-9]";
+    public static Pattern validWikiPath = Pattern.compile("^"+DELIMITER+"?("+validWord+DELIMITER+")*("+validWord+")"+DELIMITER+"?(?:#[A-Za-z0-9_-])?$");
+    public static Pattern relativeWikiPathFinder = Pattern.compile("^([.]{1,2}"+DELIMITER+")*(.*)$");
+    public static Pattern invalidCharFinder = Pattern.compile("[^-a-zA-Z0-9 ]");
+
+    public static WikiWord current = new WikiWord(":");
 }

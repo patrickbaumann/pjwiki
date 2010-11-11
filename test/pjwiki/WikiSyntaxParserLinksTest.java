@@ -42,7 +42,6 @@ public class WikiSyntaxParserLinksTest {
      */
     @Test
     public void testExternalLinks() {
-        System.out.println("execute");
         String text = 
                 "test [[http://www.google.com]] stuff" +
                 "[[http://www.yahoo.com|Yahoo!]] things";
@@ -54,18 +53,42 @@ public class WikiSyntaxParserLinksTest {
         assertEquals(expResult, result);
     }
 
-    public void testInternalLinks() {
-        System.out.println("execute");
+    /**
+     * Test windows links.
+     */
+    @Test
+    public void testWindowsLinks() {
         String text =
-                "test [[something]] stuff" +
-                "[[somethign2:test thigns|Yahoo!]] things";
+                "test [[C:\\Temp\\test.txt|Text File]] stuff" +
+                "[[\\\\networkshare\\location of thing\\and\\stuff]] things";
         WikiSyntaxParserLinks instance = new WikiSyntaxParserLinks();
         String expResult =
-                "test <a class='intexist' href='#' wiki='something'>something</a> stuff" +
-                "<a class='intmissing' href='#' wiki='something2:test thigns'>Yahoo!</a> things";
+                "test <a class='file' href='file:///C:/Temp/test.txt' target='_blank'>Text File</a> stuff" +
+                "<a class='file' href='file://networkshare/location of thing/and/stuff' target='_blank'>\\\\networkshare\\location of thing\\and\\stuff</a> things";
         String result = instance.execute(text);
         assertEquals(expResult, result);
     }
+
+    /**
+     * Test of execute method, of class WikiSyntaxParserLinks.
+     */
+    @Test
+    public void testInternalLinks() {
+        String text =
+                "test [[something]] stuff" +
+                "[[somethign2:test thigns|Yahoo!]] things";
+        WikiWord.current = new WikiWord(":");
+        (new WikiWord("something")).cacheAdd();
+
+        WikiSyntaxParserLinks instance = new WikiSyntaxParserLinks();
+        String expResult =
+                "test <a class='intexist' href='#' wiki='something'>something</a> stuff" +
+                "<a class='intmissing' href='#' wiki='somethign2:test thigns'>Yahoo!</a> things";
+        String result = instance.execute(text);
+        assertEquals(expResult, result);
+    }
+
+
 
 
     //TODO: self page anchor links

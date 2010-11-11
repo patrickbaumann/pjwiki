@@ -26,21 +26,33 @@ public class WikiLink{
         return from.toString()+"->"+to.toString();
     }
 
+    @Override
+    public boolean equals(Object other)
+    {
+        return other != null && other.getClass() == WikiLink.class && other.toString().compareTo(this.toString()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + (this.from != null ? this.from.hashCode() : 0);
+        hash = 79 * hash + (this.to != null ? this.to.hashCode() : 0);
+        return hash;
+    }
+
     private static Map<String, WikiLink> linkCache =
             new HashMap<String, WikiLink>();
-    public static void cachedLinkAdd(WikiWord from, WikiWord to)
+
+    public void cacheAdd()
     {
-        WikiLink wl = new WikiLink(from, to);
-        linkCache.put(wl.toString(), wl);
+        linkCache.put(this.toString(), this);
     }
-    public static boolean cachedLinkRemove(WikiWord from, WikiWord to)
+    public boolean cacheRemove()
     {
-        return null != linkCache.remove(
-                (new WikiLink(from, to)).toString()
-                );
+        return null != linkCache.remove(this.toString());
     }
-    public static boolean cachedLinkExist(WikiWord from, WikiWord to)
+    public boolean cacheExist()
     {
-        return linkCache.containsKey((new WikiLink(from, to)).toString());
+        return linkCache.containsKey(this.toString());
     }
 }

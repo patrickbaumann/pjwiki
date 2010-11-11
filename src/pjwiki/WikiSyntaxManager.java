@@ -19,10 +19,11 @@ public class WikiSyntaxManager {
         parsers = new ArrayList<WikiSyntaxParserBase>();
 
         parsers.add(new WikiSyntaxParserNoWiki());
-        parsers.add(new WikiSyntaxParserHeaders());
         parsers.add(new WikiSyntaxParserLists());
+        parsers.add(new WikiSyntaxParserLinks());
         parsers.add(new WikiSyntaxParserTables());
         parsers.add(new WikiSyntaxParserFormatting());
+        parsers.add(new WikiSyntaxParserHeaders());
 
         // TODO: WikiLinks Internal, External
         // TODO: Parser for macros

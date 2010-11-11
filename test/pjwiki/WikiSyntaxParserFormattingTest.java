@@ -126,5 +126,15 @@ public class WikiSyntaxParserFormattingTest {
         assertEquals(expResult, result);
     }
 
+    @Test
+    public void testItalicsWithTag() {
+        String text = "This [[http://google.com]] is a //test of mixing//.";
+        WikiSyntaxParserFormatting instance = new WikiSyntaxParserFormatting();
+        String expResult =
+                "This [[http://google.com]] is a <i>test of mixing</i>.";
+        String result = instance.execute(text);
+        assertEquals(expResult, result);
+    }
+
 
 }

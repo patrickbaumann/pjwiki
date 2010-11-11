@@ -50,7 +50,7 @@ public class WikiSyntaxParserFormatting extends WikiSyntaxParserBase{
     private static Pattern bold = Pattern.compile("\\*\\*(.+?)\\*\\*");
     private static String boldReplace = "<b>$1</b>";
 
-    private static Pattern italics = Pattern.compile("//(.+?)//");
+    private static Pattern italics = Pattern.compile("//([^\\[\\]]+?)//");
     private static String italicsReplace = "<i>$1</i>";
 
     private static Pattern underline = Pattern.compile("__(.+?)__");

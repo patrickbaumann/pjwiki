@@ -6,6 +6,9 @@ package pjwiki;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -13,6 +16,11 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -95,7 +103,23 @@ public class PjWikiView extends FrameView {
                 }
             }
         });
-        currentText = "Testing";
+        externalProtocols = new ArrayList<String>();
+        externalProtocols.add("http");externalProtocols.add("https");
+        externalProtocols.add("ftp");externalProtocols.add("file");
+        externalProtocols.add("mail");
+
+        currentText =
+                "====== Test Text ======\r\n" +
+                "I'm just testing **this** stuff. Maybe I should try to" +
+                " link to [[http://www.google.com|Google]]. //Yeah?!//\r\n" +
+                "\r\n" +
+                "testing a new paragraph!\r\n" +
+                "===== subsection =====\r\n" +
+                "===== subsection2 =====\r\n" +
+                "===== subsection3 =====\r\n" +
+                "Need to add paragraph handling and such\r\n";
+
+
         wikiSyntaxManager = new WikiSyntaxManager();
         setEditState(state.VIEW);
     }
@@ -169,6 +193,11 @@ public class PjWikiView extends FrameView {
 
         contentTextPane.setDoubleBuffered(true);
         contentTextPane.setName("contentTextPane"); // NOI18N
+        contentTextPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
+            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
+                contentTextPaneHyperlinkUpdate(evt);
+            }
+        });
         jScrollPane1.setViewportView(contentTextPane);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -300,7 +329,7 @@ public class PjWikiView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -343,7 +372,7 @@ public class PjWikiView extends FrameView {
             .add(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(statusMessageLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 528, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 482, Short.MAX_VALUE)
                 .add(progressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusAnimationLabel)
@@ -382,6 +411,37 @@ public class PjWikiView extends FrameView {
     private void jToolBar1ComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jToolBar1ComponentRemoved
 
     }//GEN-LAST:event_jToolBar1ComponentRemoved
+
+    private void contentTextPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_contentTextPaneHyperlinkUpdate
+        if(evt.getEventType() == javax.swing.event.HyperlinkEvent.EventType.ACTIVATED)
+        {
+            
+            URL url = evt.getURL();
+            if(url != null && !url.sameFile(contentTextPane.getPage()) && externalProtocols.contains(url.getProtocol()))
+            {
+                String osName = System.getProperty("os.name");
+                if (osName.startsWith("Windows"))
+                   try {
+                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+                    // JAVA 6: java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                } catch (IOException ex) {
+                    Logger.getLogger(PjWikiView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                // JAVA 6: java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+            }
+            else
+            {
+                if(evt.getDescription().charAt(0) == '#')
+                {
+                    try {
+                        contentTextPane.setPage(contentTextPane.getPage().toString().split("#")[0] + evt.getDescription());
+                    } catch (IOException ex) {
+                        Logger.getLogger(PjWikiView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_contentTextPaneHyperlinkUpdate
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane contentTextPane;
@@ -432,11 +492,30 @@ public class PjWikiView extends FrameView {
             try{
                 WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
                 WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
-                String text = "<html><head></head><body>"+wikiSyntaxManager.format(currentText)+"</body></html>";
+                String text = "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN'>" +
+                        "<html>"+
+                        "<head>"+
+                        "<title>My first styled page</title>"+
+                        "<style type='text/css'>"+
+                        "body {"+
+                        "font-family:Verdana;" +
+                        "text-size:8px;}" +
+                        "pre{" +
+                        "}"+
+                        "</style>"+
+                        "</head>"+
+                        "<body>" +
+                        wikiSyntaxManager.format(currentText) +
+                        "</body>" +
+                        "</html>";
                 //contentTextPane.setContentType("text/html");
                 contentTextPane.setEditable(false);
                 contentTextPane.setContentType("text/html");
-                contentTextPane.setText(text);
+                File tempFile = File.createTempFile("wiki", ".html");
+                FileWriter fstream = new FileWriter(tempFile);
+                fstream.write(text);
+                fstream.close();
+                contentTextPane.setPage(tempFile.toURL());
             }catch(Exception e){
                 JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
             }
@@ -500,4 +579,7 @@ public class PjWikiView extends FrameView {
     private String currentText;
 
     private WikiSyntaxManager wikiSyntaxManager;
+
+    private List<String> externalProtocols;
+    
 }
