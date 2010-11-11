@@ -6,6 +6,7 @@ package pjwiki;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.RenderingHints.Key;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,8 +46,13 @@ public class PjWikiView extends FrameView {
 
         if(launchWithWikiWord != null)
         {
-            currentWikiWordFile = new WikiWordFile(launchWithWikiWord);
+            WikiWord.current = launchWithWikiWord;
         }
+        else
+        {
+            WikiWord.current = new WikiWord(WikiWord.INDEX_TEXT);
+        }
+        currentWikiWordFile = new WikiWordFile(WikiWord.current);
 
         initComponents();
 
@@ -227,6 +233,11 @@ public class PjWikiView extends FrameView {
         jPanel4.add(navBackButton);
 
         navLocationTextField1.setName("navLocationTextField1"); // NOI18N
+        navLocationTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                navLocationTextField1KeyReleased(evt);
+            }
+        });
         jPanel4.add(navLocationTextField1);
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(pjwiki.PjWikiApp.class).getContext().getResourceMap(PjWikiView.class);
@@ -329,7 +340,7 @@ public class PjWikiView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -372,7 +383,7 @@ public class PjWikiView extends FrameView {
             .add(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(statusMessageLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 482, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 528, Short.MAX_VALUE)
                 .add(progressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusAnimationLabel)
@@ -443,6 +454,13 @@ public class PjWikiView extends FrameView {
         }
     }//GEN-LAST:event_contentTextPaneHyperlinkUpdate
 
+    private void navLocationTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_navLocationTextField1KeyReleased
+        if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE)
+        {
+            navLocationTextField1.setText(WikiWord.current.toString());
+        }
+    }//GEN-LAST:event_navLocationTextField1KeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane contentTextPane;
     private javax.swing.JButton editButton;
@@ -492,22 +510,7 @@ public class PjWikiView extends FrameView {
             try{
                 WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
                 WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
-                String text = "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN'>" +
-                        "<html>"+
-                        "<head>"+
-                        "<title>My first styled page</title>"+
-                        "<style type='text/css'>"+
-                        "body {"+
-                        "font-family:Verdana;" +
-                        "text-size:8px;}" +
-                        "pre{" +
-                        "}"+
-                        "</style>"+
-                        "</head>"+
-                        "<body>" +
-                        wikiSyntaxManager.format(currentText) +
-                        "</body>" +
-                        "</html>";
+                String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(currentText));
                 //contentTextPane.setContentType("text/html");
                 contentTextPane.setEditable(false);
                 contentTextPane.setContentType("text/html");
