@@ -135,7 +135,4 @@ public class PjWikiApp extends SingleFrameApplication {
     public String getUsername() {
         return username;
     }
-
-    static List<WikiWord.WikiLink> linkList
-            = new ArrayList<WikiWord.WikiLink>();
 }

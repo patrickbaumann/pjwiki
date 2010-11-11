@@ -6,7 +6,9 @@
 package pjwiki;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,11 +17,6 @@ import java.util.regex.Pattern;
  * @author Patrick
  */
 public class WikiWord {
-    public class WikiLink{
-        public WikiWord from;
-        public WikiWord to;
-    }
-
     WikiWord(String rawString)
     {
         input = rawString;
