@@ -1,6 +1,11 @@
 package pjwiki;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.util.Date;
 
 /*
  * To change this template, choose Tools | Templates
@@ -18,6 +23,7 @@ public class WikiWordFile {
     static String wordFileExtension = ".pwk";
     static String backupFileExtension = ".bak";
     static String lockFileExtension = ".lock";
+    static String lockFileDelimeter = "|";
 
     private static File dataRoot;
 
@@ -31,6 +37,8 @@ public class WikiWordFile {
         this.word = new WikiWord(wikiWordString);
         validate();
     }
+
+
 
     /**
      *
@@ -63,22 +71,35 @@ public class WikiWordFile {
     {
         validate();
         String wordText = "";
-
-
         return wordText;
     }
 
-    /**
-     *
-     * @param contents
-     * @return
-     * @throws Exception
-     */
-    public boolean saveWikiMarkup(String contents) throws Exception
+    public boolean exists() throws Exception
     {
         validate();
-        return false;
+        return path().exists();
     }
+
+    public void save(String content) throws Exception
+    {
+        validate();
+        if(content == null) content = "";
+        writefile(path(), content);
+    }
+
+    public String load() throws Exception
+    {
+        validate();
+        if(exists())
+        {
+            return readfile(path());
+        }
+        else
+        {
+            return null;
+        }
+    }
+
 
     /**
      *
@@ -89,7 +110,19 @@ public class WikiWordFile {
     public boolean tryLockFor(String username) throws Exception
     {
         validate();
-        return false;
+        if(isModifiableFor(username))
+        {
+            writefile(path(lockFileExtension),
+                    username +
+                    lockFileDelimeter + "0" +
+                    lockFileDelimeter + "0"
+                    );
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     /**
      *
@@ -100,7 +133,22 @@ public class WikiWordFile {
     public boolean isModifiableFor(String username) throws Exception
     {
         validate();
-        return false;
+        File lockfile = path(lockFileExtension);
+
+        if(!lockfile.exists())
+        {
+            return true;
+        }
+        else
+        {
+            String lockContents = readfile(lockfile);
+            String[] lockColumns = lockContents.split("\\"+lockFileDelimeter);
+            // USER|DATE|TIME
+            if(lockColumns[0].contentEquals(username))
+                return true;
+            else
+                return false;
+        }
     }
     /**
      *
@@ -111,9 +159,26 @@ public class WikiWordFile {
     public boolean unlockFor(String username) throws Exception
     {
         validate();
-        return true;
+        if(isModifiableFor(username))
+        {
+            path(lockFileExtension).delete();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
-    
+
+
+    private File path(String extension) throws Exception
+    {
+        validate();
+        if (extension == null) extension = wordFileExtension;
+        return new File(dataRoot + word.toFilePath(File.separator) + extension);
+    }
+    private File path() throws Exception{return path(null);}
+
     /**
      *
      * @return
@@ -136,5 +201,28 @@ public class WikiWordFile {
         {
             WikiWordFile.dataRoot = dataRoot;
         }
+    }
+
+    private String readfile(File f) throws Exception
+    {
+        FileInputStream fis = new FileInputStream(f);
+        InputStreamReader isr = new InputStreamReader(fis);
+        LineNumberReader lnr = new LineNumberReader(isr);
+        String ret = "";
+        String line;
+        String lineend = System.getProperty("line.separator");
+        while(null != (line = lnr.readLine()))
+        {
+            ret += line + lineend;
+        }
+        fis.close();
+        return ret;
+        
+    }
+    private void writefile(File f, String content) throws Exception
+    {
+        FileWriter fw = new FileWriter(f); // do not append
+        fw.write(content);
+        fw.close();
     }
 }

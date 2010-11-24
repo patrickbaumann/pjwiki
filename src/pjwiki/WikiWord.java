@@ -5,6 +5,7 @@
 
 package pjwiki;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -117,12 +118,12 @@ public class WikiWord {
      *
      * @return
      */
-    public String toFilePath()
+    public String toFilePath(String seperator)
     {
         String filePath = "";
         for(String word : wikiPath)
         {
-            filePath += "\\" + word;
+            filePath += seperator + word;
         }
         return filePath;
     }

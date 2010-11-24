@@ -6,10 +6,6 @@ package pjwiki;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.RenderingHints.Key;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -19,9 +15,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -43,16 +43,6 @@ public class PjWikiView extends FrameView {
      */
     public PjWikiView(SingleFrameApplication app, WikiWord launchWithWikiWord) throws Exception {
         super(app);
-
-        if(launchWithWikiWord != null)
-        {
-            WikiWord.current = launchWithWikiWord;
-        }
-        else
-        {
-            WikiWord.current = new WikiWord(WikiWord.INDEX_TEXT);
-        }
-        currentWikiWordFile = new WikiWordFile(WikiWord.current);
 
         initComponents();
 
@@ -109,6 +99,16 @@ public class PjWikiView extends FrameView {
                 }
             }
         });
+
+        if(launchWithWikiWord != null)
+        {
+            WikiWord.current = launchWithWikiWord;
+        } else {
+            WikiWord.current = new WikiWord(WikiWord.INDEX_TEXT);
+        }
+
+
+
         externalProtocols = new ArrayList<String>();
         externalProtocols.add("http");externalProtocols.add("https");
         externalProtocols.add("ftp");externalProtocols.add("file");
@@ -142,6 +142,25 @@ public class PjWikiView extends FrameView {
         }
         PjWikiApp.getApplication().show(aboutBox);
     }
+
+    @Action
+    public boolean displayEditState()
+    {
+
+
+        return false;
+    }
+
+    public boolean displayPreviewState()
+    {
+        return false;
+    }
+
+    public boolean displayViewState()
+    {
+        return false;
+    }
+
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -424,26 +443,21 @@ public class PjWikiView extends FrameView {
     }//GEN-LAST:event_jToolBar1ComponentRemoved
 
     private void contentTextPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_contentTextPaneHyperlinkUpdate
-        if(evt.getEventType() == javax.swing.event.HyperlinkEvent.EventType.ACTIVATED)
-        {
-            
+        if(evt.getEventType() == javax.swing.event.HyperlinkEvent.EventType.ACTIVATED) {
+
             URL url = evt.getURL();
-            if(url != null && !url.sameFile(contentTextPane.getPage()) && externalProtocols.contains(url.getProtocol()))
-            {
+            if(url != null && !url.sameFile(contentTextPane.getPage()) && externalProtocols.contains(url.getProtocol())) {
                 String osName = System.getProperty("os.name");
                 if (osName.startsWith("Windows"))
-                   try {
-                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
-                    // JAVA 6: java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-                } catch (IOException ex) {
-                    Logger.getLogger(PjWikiView.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    try {
+                        Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+                        // JAVA 6: java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PjWikiView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 // JAVA 6: java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-            }
-            else
-            {
-                if(evt.getDescription().charAt(0) == '#')
-                {
+            } else {
+                if(evt.getDescription().charAt(0) == '#') {
                     try {
                         contentTextPane.setPage(contentTextPane.getPage().toString().split("#")[0] + evt.getDescription());
                     } catch (IOException ex) {
@@ -452,7 +466,7 @@ public class PjWikiView extends FrameView {
                 }
             }
         }
-    }//GEN-LAST:event_contentTextPaneHyperlinkUpdate
+}//GEN-LAST:event_contentTextPaneHyperlinkUpdate
 
     private void navLocationTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_navLocationTextField1KeyReleased
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE)
@@ -571,18 +585,18 @@ public class PjWikiView extends FrameView {
     private int busyIconIndex = 0;
 
     private JDialog aboutBox;
-    private WikiWordFile currentWikiWordFile;
+
+    private List<WikiWord> history;
+    private ListIterator<WikiWord> historyLocation;
+
     enum state{
         VIEW,
         EDIT,
         PREVIEW;
     }
     private state editState;
-
     private String currentText;
-
     private WikiSyntaxManager wikiSyntaxManager;
 
     private List<String> externalProtocols;
-    
 }
