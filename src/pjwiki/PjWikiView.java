@@ -107,8 +107,6 @@ public class PjWikiView extends FrameView {
             WikiWord.current = new WikiWord(WikiWord.INDEX_TEXT);
         }
 
-
-
         externalProtocols = new ArrayList<String>();
         externalProtocols.add("http");externalProtocols.add("https");
         externalProtocols.add("ftp");externalProtocols.add("file");
@@ -127,7 +125,7 @@ public class PjWikiView extends FrameView {
 
 
         wikiSyntaxManager = new WikiSyntaxManager();
-        setEditState(state.VIEW);
+        enterState(state.VIEW);
     }
 
     /**
@@ -142,25 +140,6 @@ public class PjWikiView extends FrameView {
         }
         PjWikiApp.getApplication().show(aboutBox);
     }
-
-    @Action
-    public boolean displayEditState()
-    {
-
-
-        return false;
-    }
-
-    public boolean displayPreviewState()
-    {
-        return false;
-    }
-
-    public boolean displayViewState()
-    {
-        return false;
-    }
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -432,9 +411,9 @@ public class PjWikiView extends FrameView {
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         if(editState == state.VIEW)
         { 
-            setEditState(state.EDIT);
+            enterState(state.EDIT);
         }else{
-            setEditState(state.VIEW);
+            enterState(state.VIEW);
         }
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -540,7 +519,73 @@ public class PjWikiView extends FrameView {
         contentTextPane.revalidate();
     }
 
-    private void setEditState(state s)
+    
+    private boolean switchToState(state s)
+    {
+        if(exitState())
+        {
+            return enterState(s);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    private boolean exitState()
+    {
+        return exitState(editState);
+    }
+
+    private boolean exitState(state s)
+    {
+        switch(s)
+        {
+            case VIEW:
+                // do nothing
+                break;
+            case EDIT:
+                // dirty?
+                    // true: save?
+                        // yes: save and move on
+                        // no: just move on
+                        // cancel: return false
+                    // false: move on
+                break;
+        }
+        return true;
+    }
+
+    private boolean enterState(state s)
+    {
+        switch(s)
+        {
+            case VIEW:
+                // TODO: CODE THIS METHOD
+                // see if current wiki word exists
+                    // false: ask if user would like to create
+                        // true: enterState(EDIT)
+                        // false: return to previous in history
+                           // exception (no history): display error
+                    // true: load word contents into currentText
+                // call displayEditState(Edit) to update pane
+                break;
+            case EDIT:
+                // see if current wiki word is modifiable
+                    // true: see if word exists
+                        // true: load contents into currentText
+                        // false: set currentText to empty string
+                    // false: Alert user and return to previous word
+                break;
+        }
+
+
+        // all worked out, no return falses: let's set the current state and return true;
+        editState = s;
+        return true;
+    }
+
+    private void displayState(state s)
     {
         GridLayout l = (GridLayout)jPanel3.getLayout();
         Dimension d = jToolBar1.getPreferredSize();
@@ -553,7 +598,7 @@ public class PjWikiView extends FrameView {
             d.height = 27;
             l.setRows(1);
         }
-        else if(s == state.PREVIEW || s == state.EDIT )
+        else if(s == state.EDIT )
         {
             l.setRows(2);
             d.height = 52;
@@ -563,20 +608,18 @@ public class PjWikiView extends FrameView {
             }
         }
 
-        if((s== state.PREVIEW || s == state.VIEW) && editState == state.EDIT)
-        {
-            currentText = contentTextPane.getText();
-        }else{
-            contentTextPane.setText(currentText);
-        }
-        editState = s;
-
         renderText();
 
         jToolBar1.setPreferredSize(d);
         jPanel1.revalidate();
         jPanel1.repaint();
     }
+
+    public void displayPreview(boolean preview)
+    {
+        // change whatever needs to be changed
+    }
+
 
     private final Timer messageTimer;
     private final Timer busyIconTimer;
@@ -591,8 +634,8 @@ public class PjWikiView extends FrameView {
 
     enum state{
         VIEW,
-        EDIT,
-        PREVIEW;
+        EDIT;
+        // not including preview as it's a sub-state of edit
     }
     private state editState;
     private String currentText;

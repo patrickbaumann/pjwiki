@@ -1,11 +1,9 @@
 package pjwiki;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.util.Date;
 
 /*
  * To change this template, choose Tools | Templates
@@ -205,17 +203,15 @@ public class WikiWordFile {
 
     private String readfile(File f) throws Exception
     {
-        FileInputStream fis = new FileInputStream(f);
-        InputStreamReader isr = new InputStreamReader(fis);
-        LineNumberReader lnr = new LineNumberReader(isr);
+        BufferedReader in = new BufferedReader( new FileReader(f));
         String ret = "";
         String line;
         String lineend = System.getProperty("line.separator");
-        while(null != (line = lnr.readLine()))
+        while(null != (line = in.readLine()))
         {
             ret += line + lineend;
         }
-        fis.close();
+        in.close();
         return ret;
         
     }

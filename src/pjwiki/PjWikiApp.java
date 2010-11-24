@@ -10,8 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -32,7 +30,6 @@ public class PjWikiApp extends SingleFrameApplication {
         // set default options
         optionsPath = "./settings.conf";
         launchWithWikiWord = null;
-        username = System.getProperty("user.name");
 
         // parse command line arguments
         for(int i = 0; i < args.length; i++)
@@ -55,6 +52,11 @@ public class PjWikiApp extends SingleFrameApplication {
                 ++i;
                 username = args[i];
             }
+
+            // TODO: authentication system (dummy for now)
+            if(username == null)
+            username = System.getProperty("user.name");
+
         }
     }
 
@@ -118,6 +120,12 @@ public class PjWikiApp extends SingleFrameApplication {
             {
                 WikiWordFile.setDataRoot(new File(m.group(1)));
             }
+            // TODO: load authentication driver setting
+            // potential drivers:
+                // plain text username / dropdown
+                // System.getProperty("user.name")
+                // oauth?
+                // etc.
         }
         in.close();
 
