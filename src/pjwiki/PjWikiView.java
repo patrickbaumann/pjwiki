@@ -34,7 +34,7 @@ import javax.swing.text.StyledEditorKit;
  */
 public class PjWikiView extends FrameView {
 
-    // TODO: Look into alternative html renderer. Mozilla's mayhaps? How about the chrome engine?
+    // TODO: Implement lobo / cobra browser in place of text pane
 
 
     /**
@@ -123,6 +123,8 @@ public class PjWikiView extends FrameView {
                 "===== subsection3 =====\r\n" +
                 "Need to add paragraph handling and such\r\n";
 
+        history = new ArrayList<WikiWord>();
+        historyLocation = history.listIterator();
 
         wikiSyntaxManager = new WikiSyntaxManager();
         enterState(state.VIEW);
@@ -542,15 +544,30 @@ public class PjWikiView extends FrameView {
         switch(s)
         {
             case VIEW:
-                // do nothing
+                // nothing to do at the moment.
                 break;
             case EDIT:
-                // dirty?
-                    // true: save?
-                        // yes: save and move on
-                        // no: just move on
-                        // cancel: return false
-                    // false: move on
+                if(contentTextPane.getText().contentEquals(currentText))
+                {
+                    //Custom button text
+                    int n = displayYesNoCancel(
+                        "Save Changes?", "The wiki word has changed. Would you like to save it first?");
+                    switch(n)
+                    {
+                        case 0: //yes
+                            try{
+                                (new WikiWordFile(WikiWord.current)).save(contentTextPane.getText());
+                            }catch(Exception e)
+                            {
+                                displayException(e);
+                                return false;
+                            }
+                        case 1: //no
+                            break;
+                        case 2: //cancel
+                            return false;
+                    }
+                }
                 break;
         }
         return true;
@@ -563,24 +580,80 @@ public class PjWikiView extends FrameView {
             case VIEW:
                 // TODO: CODE THIS METHOD
                 // see if current wiki word exists
-                    // false: ask if user would like to create
-                        // true: enterState(EDIT)
-                        // false: return to previous in history
-                           // exception (no history): display error
-                    // true: load word contents into currentText
-                // call displayEditState(Edit) to update pane
+                try{
+                    WikiWordFile wwf = new WikiWordFile(WikiWord.current);
+                    if(!wwf.exists())
+                    {
+                        // ask if user would like to create
+                        int n = displayYesNoCancel(
+                                "Create?", "The "+ WikiWord.current +" WikiWord does not exist. Would you like to create it?");
+                            // true: enterState(EDIT)
+                        switch(n)
+                        {
+                            case 0: //yes
+                                enterState(editState.EDIT);
+                                return true;
+                            case 1: //no
+                            case 2: //cancel
+                                // false: return to previous in history
+                                if(historyLocation.hasPrevious())
+                                {
+                                    WikiWord.current = historyLocation.previous();
+                                }
+                                else
+                                {
+                                    //TODO: (remove comment) throw new Exception("You cannot go back in history!");
+                                }
+                                // exception (no history): display error
+                                return false;
+                        }
+                    }
+                    // if nothing has gone wrong, let's read the file contents
+                    saveToHistory();
+                    currentText = wwf.load();
+                }
+                catch(Exception e)
+                {
+                    displayException(e);
+                    return false;
+                }
+                displayState(s);
                 break;
             case EDIT:
-                // see if current wiki word is modifiable
-                    // true: see if word exists
-                        // true: load contents into currentText
-                        // false: set currentText to empty string
-                    // false: Alert user and return to previous word
+                try{
+                    WikiWordFile wwf = new WikiWordFile(WikiWord.current);
+                    // see if current wiki word is modifiable
+                    if(wwf.isModifiableFor(PjWikiApp.getApplication().getUsername()))
+                    {
+                        // true: see if word exists
+                        if(wwf.exists())
+                        {
+                            // true: load contents into currentText
+                            currentText = wwf.load();
+                        }
+                        else
+                        {
+                            // false: set currentText to empty string
+                            currentText = "======"+WikiWord.current.name()+"======\n";
+                        }
+                    }
+                    else
+                    {
+                        // false: Alert user and return to previous word
+                        displayMessage("You cannot modify this word at this time", JOptionPane.OK_OPTION);
+                        return false;
+                    }
+                }
+                catch(Exception e)
+                {
+                    displayException(e);
+                    return false;
+                }
                 break;
         }
 
-
         // all worked out, no return falses: let's set the current state and return true;
+        displayState(s);
         editState = s;
         return true;
     }
@@ -618,6 +691,45 @@ public class PjWikiView extends FrameView {
     public void displayPreview(boolean preview)
     {
         // change whatever needs to be changed
+    }
+
+    private void displayException(Exception e)
+    {
+        displayMessage(e.getMessage(), JOptionPane.ERROR_MESSAGE);
+    }
+    private void displayMessage(String s, int JOptionPaneType)
+    {
+        JOptionPane.showMessageDialog(this.getFrame(),
+            s,
+            (JOptionPane.ERROR_MESSAGE == JOptionPaneType? "Error" : "Warning"),
+            JOptionPaneType);
+    }
+
+    private int displayYesNoCancel(String title, String text)
+    {
+        String[] options = {"Yes", "No", "Cancel"};
+        int n = JOptionPane.showOptionDialog(
+                this.getFrame(),
+                text,
+                title,
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, options, options[2]);
+        return n;
+    }
+
+    private void saveToHistory()
+    {
+        if(!historyLocation.hasNext() || historyLocation.next() != WikiWord.current)
+        {
+            historyLocation.previous();
+            while(historyLocation.hasNext())
+            {
+                historyLocation.next();
+                historyLocation.remove();
+            }
+            historyLocation.add(WikiWord.current);
+        }
     }
 
 

@@ -25,7 +25,6 @@ public class WikiSyntaxManager {
         parsers.add(new WikiSyntaxParserFormatting());
         parsers.add(new WikiSyntaxParserHeaders());
 
-        // TODO: WikiLinks Internal, External
         // TODO: Parser for macros
         // TODO: Wishlist: JRuby interpreter integration and ability to use ruby to add custom parsers
         // TODO: Images
