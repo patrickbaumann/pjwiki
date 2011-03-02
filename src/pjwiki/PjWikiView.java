@@ -163,13 +163,13 @@ public class PjWikiView extends FrameView {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        wikiViewSplitPane = new javax.swing.JSplitPane();
+        contentPanel = new javax.swing.JPanel();
+        contentScrollPane = new javax.swing.JScrollPane();
         contentTextPane = new javax.swing.JTextPane();
-        jToolBar1 = new javax.swing.JToolBar();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
+        contentToolbar = new javax.swing.JToolBar();
+        contentToolbarPane = new javax.swing.JPanel();
+        navigationToolbar = new javax.swing.JPanel();
         navBackButton = new javax.swing.JButton();
         navLocationTextField1 = new javax.swing.JTextField();
         navGoButton = new javax.swing.JButton();
@@ -179,12 +179,12 @@ public class PjWikiView extends FrameView {
         editSearchSeparator = new javax.swing.JToolBar.Separator();
         searchTextField = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
+        editToolbar = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        tableOfContentsJPanel = new javax.swing.JPanel();
+        tableOfContentsScrollPane = new javax.swing.JScrollPane();
         tocTextPane = new javax.swing.JTextPane();
-        jToolBar2 = new javax.swing.JToolBar();
+        tableOfContentsToolbar = new javax.swing.JToolBar();
         homeButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -199,13 +199,13 @@ public class PjWikiView extends FrameView {
 
         mainPanel.setName("mainPanel"); // NOI18N
 
-        jSplitPane1.setDividerLocation(200);
-        jSplitPane1.setName("jSplitPane1"); // NOI18N
+        wikiViewSplitPane.setDividerLocation(200);
+        wikiViewSplitPane.setName("wikiViewSplitPane"); // NOI18N
 
-        jPanel1.setName("jPanel1"); // NOI18N
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        contentPanel.setName("contentPanel"); // NOI18N
+        contentPanel.setLayout(new java.awt.BorderLayout());
 
-        jScrollPane1.setName("jScrollPane1"); // NOI18N
+        contentScrollPane.setName("contentScrollPane"); // NOI18N
 
         contentTextPane.setDoubleBuffered(true);
         contentTextPane.setName("contentTextPane"); // NOI18N
@@ -214,33 +214,33 @@ public class PjWikiView extends FrameView {
                 contentTextPaneHyperlinkUpdate(evt);
             }
         });
-        jScrollPane1.setViewportView(contentTextPane);
+        contentScrollPane.setViewportView(contentTextPane);
 
-        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        contentPanel.add(contentScrollPane, java.awt.BorderLayout.CENTER);
 
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
-        jToolBar1.setName("jToolBar1"); // NOI18N
-        jToolBar1.setPreferredSize(new java.awt.Dimension(446, 52));
-        jToolBar1.addContainerListener(new java.awt.event.ContainerAdapter() {
+        contentToolbar.setFloatable(false);
+        contentToolbar.setRollover(true);
+        contentToolbar.setName("contentToolbar"); // NOI18N
+        contentToolbar.setPreferredSize(new java.awt.Dimension(446, 52));
+        contentToolbar.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentRemoved(java.awt.event.ContainerEvent evt) {
-                jToolBar1ComponentRemoved(evt);
+                contentToolbarComponentRemoved(evt);
             }
         });
 
-        jPanel3.setName("jPanel3"); // NOI18N
-        jPanel3.setPreferredSize(new java.awt.Dimension(444, 25));
-        jPanel3.setLayout(new java.awt.GridLayout(2, 0));
+        contentToolbarPane.setName("contentToolbarPane"); // NOI18N
+        contentToolbarPane.setPreferredSize(new java.awt.Dimension(444, 25));
+        contentToolbarPane.setLayout(new java.awt.GridLayout(2, 0));
 
-        jPanel4.setName("jPanel4"); // NOI18N
-        jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
+        navigationToolbar.setName("navigationToolbar"); // NOI18N
+        navigationToolbar.setLayout(new javax.swing.BoxLayout(navigationToolbar, javax.swing.BoxLayout.LINE_AXIS));
 
         navBackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-28.png"))); // NOI18N
         navBackButton.setFocusable(false);
         navBackButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         navBackButton.setName("navBackButton"); // NOI18N
         navBackButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jPanel4.add(navBackButton);
+        navigationToolbar.add(navBackButton);
 
         navLocationTextField1.setName("navLocationTextField1"); // NOI18N
         navLocationTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -248,7 +248,7 @@ public class PjWikiView extends FrameView {
                 navLocationTextField1KeyReleased(evt);
             }
         });
-        jPanel4.add(navLocationTextField1);
+        navigationToolbar.add(navLocationTextField1);
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(pjwiki.PjWikiApp.class).getContext().getResourceMap(PjWikiView.class);
         navGoButton.setText(resourceMap.getString("navGoButton.text")); // NOI18N
@@ -262,17 +262,17 @@ public class PjWikiView extends FrameView {
                 navGoButtonActionPerformed(evt);
             }
         });
-        jPanel4.add(navGoButton);
+        navigationToolbar.add(navGoButton);
 
         navForwardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-26.png"))); // NOI18N
         navForwardButton.setFocusable(false);
         navForwardButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         navForwardButton.setName("navForwardButton"); // NOI18N
         navForwardButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jPanel4.add(navForwardButton);
+        navigationToolbar.add(navForwardButton);
 
         navEditSeparator.setName("navEditSeparator"); // NOI18N
-        jPanel4.add(navEditSeparator);
+        navigationToolbar.add(navEditSeparator);
 
         editButton.setText(resourceMap.getString("editButton.text")); // NOI18N
         editButton.setFocusable(false);
@@ -284,73 +284,73 @@ public class PjWikiView extends FrameView {
                 editButtonActionPerformed(evt);
             }
         });
-        jPanel4.add(editButton);
+        navigationToolbar.add(editButton);
 
         editSearchSeparator.setMaximumSize(new java.awt.Dimension(6, 0));
         editSearchSeparator.setName("editSearchSeparator"); // NOI18N
-        jPanel4.add(editSearchSeparator);
+        navigationToolbar.add(editSearchSeparator);
 
         searchTextField.setName("searchTextField"); // NOI18N
-        jPanel4.add(searchTextField);
+        navigationToolbar.add(searchTextField);
 
         searchButton.setText(resourceMap.getString("searchButton.text")); // NOI18N
         searchButton.setFocusable(false);
         searchButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         searchButton.setName("searchButton"); // NOI18N
         searchButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jPanel4.add(searchButton);
+        navigationToolbar.add(searchButton);
 
-        jPanel3.add(jPanel4);
+        contentToolbarPane.add(navigationToolbar);
 
-        jPanel5.setName("jPanel5"); // NOI18N
-        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
+        editToolbar.setName("editToolbar"); // NOI18N
+        editToolbar.setLayout(new javax.swing.BoxLayout(editToolbar, javax.swing.BoxLayout.LINE_AXIS));
 
         jButton1.setText(resourceMap.getString("previewButton.text")); // NOI18N
         jButton1.setName("previewButton"); // NOI18N
-        jPanel5.add(jButton1);
+        editToolbar.add(jButton1);
 
-        jPanel3.add(jPanel5);
+        contentToolbarPane.add(editToolbar);
 
-        jToolBar1.add(jPanel3);
+        contentToolbar.add(contentToolbarPane);
 
-        jPanel1.add(jToolBar1, java.awt.BorderLayout.PAGE_START);
+        contentPanel.add(contentToolbar, java.awt.BorderLayout.PAGE_START);
 
-        jSplitPane1.setRightComponent(jPanel1);
+        wikiViewSplitPane.setRightComponent(contentPanel);
 
-        jPanel2.setName("jPanel2"); // NOI18N
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        tableOfContentsJPanel.setName("tableOfContentsJPanel"); // NOI18N
+        tableOfContentsJPanel.setLayout(new java.awt.BorderLayout());
 
-        jScrollPane2.setName("jScrollPane2"); // NOI18N
+        tableOfContentsScrollPane.setName("tableOfContentsScrollPane"); // NOI18N
 
         tocTextPane.setName("tocTextPane"); // NOI18N
-        jScrollPane2.setViewportView(tocTextPane);
+        tableOfContentsScrollPane.setViewportView(tocTextPane);
 
-        jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        tableOfContentsJPanel.add(tableOfContentsScrollPane, java.awt.BorderLayout.CENTER);
 
-        jToolBar2.setFloatable(false);
-        jToolBar2.setRollover(true);
-        jToolBar2.setName("jToolBar2"); // NOI18N
+        tableOfContentsToolbar.setFloatable(false);
+        tableOfContentsToolbar.setRollover(true);
+        tableOfContentsToolbar.setName("tableOfContentsToolbar"); // NOI18N
 
         homeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pjwiki/resources/icons16/onebit_50-0.png"))); // NOI18N
         homeButton.setFocusable(false);
         homeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         homeButton.setName("homeButton"); // NOI18N
         homeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(homeButton);
+        tableOfContentsToolbar.add(homeButton);
 
-        jPanel2.add(jToolBar2, java.awt.BorderLayout.PAGE_START);
+        tableOfContentsJPanel.add(tableOfContentsToolbar, java.awt.BorderLayout.PAGE_START);
 
-        jSplitPane1.setLeftComponent(jPanel2);
+        wikiViewSplitPane.setLeftComponent(tableOfContentsJPanel);
 
         org.jdesktop.layout.GroupLayout mainPanelLayout = new org.jdesktop.layout.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+            .add(wikiViewSplitPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+            .add(wikiViewSplitPane, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -393,7 +393,7 @@ public class PjWikiView extends FrameView {
             .add(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(statusMessageLabel)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 528, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 482, Short.MAX_VALUE)
                 .add(progressBar, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(statusAnimationLabel)
@@ -429,9 +429,9 @@ public class PjWikiView extends FrameView {
         }
     }//GEN-LAST:event_editButtonActionPerformed
 
-    private void jToolBar1ComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jToolBar1ComponentRemoved
+    private void contentToolbarComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_contentToolbarComponentRemoved
 
-    }//GEN-LAST:event_jToolBar1ComponentRemoved
+    }//GEN-LAST:event_contentToolbarComponentRemoved
 
     private void contentTextPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_contentTextPaneHyperlinkUpdate
         if(evt.getEventType() == javax.swing.event.HyperlinkEvent.EventType.ACTIVATED) {
@@ -467,21 +467,16 @@ public class PjWikiView extends FrameView {
     }//GEN-LAST:event_navLocationTextField1KeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel contentPanel;
+    private javax.swing.JScrollPane contentScrollPane;
     private javax.swing.JTextPane contentTextPane;
+    private javax.swing.JToolBar contentToolbar;
+    private javax.swing.JPanel contentToolbarPane;
     private javax.swing.JButton editButton;
     private javax.swing.JToolBar.Separator editSearchSeparator;
+    private javax.swing.JPanel editToolbar;
     private javax.swing.JButton homeButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton navBackButton;
@@ -489,13 +484,18 @@ public class PjWikiView extends FrameView {
     private javax.swing.JButton navForwardButton;
     private javax.swing.JButton navGoButton;
     private javax.swing.JTextField navLocationTextField1;
+    private javax.swing.JPanel navigationToolbar;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchTextField;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JPanel tableOfContentsJPanel;
+    private javax.swing.JScrollPane tableOfContentsScrollPane;
+    private javax.swing.JToolBar tableOfContentsToolbar;
     private javax.swing.JTextPane tocTextPane;
+    private javax.swing.JSplitPane wikiViewSplitPane;
     // End of variables declaration//GEN-END:variables
 
     private void renderText()
@@ -670,13 +670,13 @@ public class PjWikiView extends FrameView {
 
     private void displayState(state s)
     {
-        GridLayout l = (GridLayout)jPanel3.getLayout();
-        Dimension d = jToolBar1.getPreferredSize();
+        GridLayout l = (GridLayout)contentToolbarPane.getLayout();
+        Dimension d = contentToolbar.getPreferredSize();
         if(s == state.VIEW)
         {
-            if(jPanel5.getParent() != null)
+            if(editToolbar.getParent() != null)
             {
-                jPanel3.remove(jPanel5);
+                contentToolbarPane.remove(editToolbar);
             }
             d.height = 27;
             l.setRows(1);
@@ -685,17 +685,17 @@ public class PjWikiView extends FrameView {
         {
             l.setRows(2);
             d.height = 52;
-            if(jPanel5.getParent() == null)
+            if(editToolbar.getParent() == null)
             {
-                jPanel3.add(jPanel5);
+                contentToolbarPane.add(editToolbar);
             }
         }
 
         renderText();
 
-        jToolBar1.setPreferredSize(d);
-        jPanel1.revalidate();
-        jPanel1.repaint();
+        contentToolbar.setPreferredSize(d);
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
     public void displayPreview(boolean preview)

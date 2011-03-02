@@ -10,27 +10,27 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="0" pref="652" max="32767" attributes="0"/>
+              <Component id="wikiViewSplitPane" alignment="0" pref="652" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jSplitPane1" alignment="0" pref="539" max="32767" attributes="0"/>
+              <Component id="wikiViewSplitPane" alignment="0" pref="539" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JSplitPane" name="jSplitPane1">
+        <Container class="javax.swing.JSplitPane" name="wikiViewSplitPane">
           <Properties>
             <Property name="dividerLocation" type="int" value="200"/>
-            <Property name="name" type="java.lang.String" value="jSplitPane1" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="wikiViewSplitPane" noResource="true"/>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="jPanel1">
+            <Container class="javax.swing.JPanel" name="contentPanel">
               <Properties>
-                <Property name="name" type="java.lang.String" value="jPanel1" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="contentPanel" noResource="true"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
@@ -40,9 +40,9 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+                <Container class="javax.swing.JScrollPane" name="contentScrollPane">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="contentScrollPane" noResource="true"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -66,17 +66,17 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JToolBar" name="jToolBar1">
+                <Container class="javax.swing.JToolBar" name="contentToolbar">
                   <Properties>
                     <Property name="floatable" type="boolean" value="false"/>
                     <Property name="rollover" type="boolean" value="true"/>
-                    <Property name="name" type="java.lang.String" value="jToolBar1" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="contentToolbar" noResource="true"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[446, 52]"/>
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="componentRemoved" listener="java.awt.event.ContainerListener" parameters="java.awt.event.ContainerEvent" handler="jToolBar1ComponentRemoved"/>
+                    <EventHandler event="componentRemoved" listener="java.awt.event.ContainerListener" parameters="java.awt.event.ContainerEvent" handler="contentToolbarComponentRemoved"/>
                   </Events>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
@@ -86,9 +86,9 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
                   <SubComponents>
-                    <Container class="javax.swing.JPanel" name="jPanel3">
+                    <Container class="javax.swing.JPanel" name="contentToolbarPane">
                       <Properties>
-                        <Property name="name" type="java.lang.String" value="jPanel3" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="contentToolbarPane" noResource="true"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                           <Dimension value="[444, 25]"/>
                         </Property>
@@ -99,9 +99,9 @@
                         <Property name="rows" type="int" value="2"/>
                       </Layout>
                       <SubComponents>
-                        <Container class="javax.swing.JPanel" name="jPanel4">
+                        <Container class="javax.swing.JPanel" name="navigationToolbar">
                           <Properties>
-                            <Property name="name" type="java.lang.String" value="jPanel4" noResource="true"/>
+                            <Property name="name" type="java.lang.String" value="navigationToolbar" noResource="true"/>
                           </Properties>
 
                           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
@@ -192,9 +192,9 @@
                             </Component>
                           </SubComponents>
                         </Container>
-                        <Container class="javax.swing.JPanel" name="jPanel5">
+                        <Container class="javax.swing.JPanel" name="editToolbar">
                           <Properties>
-                            <Property name="name" type="java.lang.String" value="jPanel5" noResource="true"/>
+                            <Property name="name" type="java.lang.String" value="editToolbar" noResource="true"/>
                           </Properties>
 
                           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
@@ -213,9 +213,9 @@
                 </Container>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="jPanel2">
+            <Container class="javax.swing.JPanel" name="tableOfContentsJPanel">
               <Properties>
-                <Property name="name" type="java.lang.String" value="jPanel2" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="tableOfContentsJPanel" noResource="true"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
@@ -225,9 +225,9 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+                <Container class="javax.swing.JScrollPane" name="tableOfContentsScrollPane">
                   <Properties>
-                    <Property name="name" type="java.lang.String" value="jScrollPane2" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="tableOfContentsScrollPane" noResource="true"/>
                   </Properties>
                   <AuxValues>
                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -247,11 +247,11 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JToolBar" name="jToolBar2">
+                <Container class="javax.swing.JToolBar" name="tableOfContentsToolbar">
                   <Properties>
                     <Property name="floatable" type="boolean" value="false"/>
                     <Property name="rollover" type="boolean" value="true"/>
-                    <Property name="name" type="java.lang.String" value="jToolBar2" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="tableOfContentsToolbar" noResource="true"/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
