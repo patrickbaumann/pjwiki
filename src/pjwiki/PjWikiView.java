@@ -556,7 +556,7 @@ public class PjWikiView extends FrameView {
                     {
                         case 0: //yes
                             try{
-                                (new WikiWordFile(WikiWord.current)).save(contentTextPane.getText());
+                                (new WikiWordPageFile(WikiWord.current)).save(contentTextPane.getText());
                             }catch(Exception e)
                             {
                                 displayException(e);
@@ -581,7 +581,7 @@ public class PjWikiView extends FrameView {
                 // TODO: CODE THIS METHOD
                 // see if current wiki word exists
                 try{
-                    WikiWordFile wwf = new WikiWordFile(WikiWord.current);
+                    WikiWordPageFile wwf = new WikiWordPageFile(WikiWord.current);
                     if(!wwf.exists())
                     {
                         // ask if user would like to create
@@ -621,7 +621,7 @@ public class PjWikiView extends FrameView {
                 break;
             case EDIT:
                 try{
-                    WikiWordFile wwf = new WikiWordFile(WikiWord.current);
+                    WikiWordPageFile wwf = new WikiWordPageFile(WikiWord.current);
                     // see if current wiki word is modifiable
                     if(wwf.isModifiableFor(PjWikiApp.getApplication().getUsername()))
                     {

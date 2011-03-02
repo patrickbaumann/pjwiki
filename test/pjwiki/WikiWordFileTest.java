@@ -44,11 +44,11 @@ public class WikiWordFileTest {
     @Before
     public void setUp() throws Exception {
         temppath.mkdirs();
-        WikiWordFile.setDataRoot(temppath);
+        WikiWordPageFile.setDataRoot(temppath);
 
-        WikiWordFile wwf = new WikiWordFile("testing");
+        WikiWordPageFile wwf = new WikiWordPageFile("testing");
         wwf.save("TESTING");
-        System.out.println(WikiWordFile.getDataRoot());
+        System.out.println(WikiWordPageFile.getDataRoot());
     }
 
     @After
@@ -67,19 +67,19 @@ public class WikiWordFileTest {
      */
     @Test
     public void testValidate() throws Exception {
-        WikiWordFile instance;
+        WikiWordPageFile instance;
         //WikiWordFile.setDataRoot(null);
 
-        WikiWordFile.setDataRoot(new File("."));
+        WikiWordPageFile.setDataRoot(new File("."));
         try{
-            instance = new WikiWordFile((WikiWord)null);
+            instance = new WikiWordPageFile((WikiWord)null);
             fail("Should have thrown exception for being a bad word");
         }catch(Exception e)
         {
             assertTrue(e.getMessage().contains("WikiWord"));
         }
         try{
-            instance = new WikiWordFile("Index");
+            instance = new WikiWordPageFile("Index");
         }catch(Exception e)
         {
             fail("Completely valid word should not fail!");
@@ -90,7 +90,7 @@ public class WikiWordFileTest {
     public void testSaveAndLoad() throws Exception {
         System.out.println("saveWikiMarkup");
         String contents = "thisisatestoftheemergency\r\n\r\ntest\r\ntesttest\r\n";
-        WikiWordFile instance = new WikiWordFile("imawesome");
+        WikiWordPageFile instance = new WikiWordPageFile("imawesome");
         instance.save(contents);
         String loaded = instance.load();
         assertEquals(contents, loaded);
@@ -101,7 +101,7 @@ public class WikiWordFileTest {
      */
     @Test
     public void testLockAndModifiable() throws Exception {
-        WikiWordFile instance = new WikiWordFile("testing");
+        WikiWordPageFile instance = new WikiWordPageFile("testing");
         
         assertTrue("Anyone can edit an unlocked file", instance.isModifiableFor("Patrick"));
         assertTrue("Anyone can edit an unlocked file", instance.isModifiableFor("Jonathon"));
@@ -122,9 +122,9 @@ public class WikiWordFileTest {
     public void testSetDataRoot() throws Exception {
         System.out.println("setDataRoot");
         File dataRoot = new File(".");
-        WikiWordFile.setDataRoot(dataRoot);
-        WikiWordFile a = new WikiWordFile("test");
-        assertNotNull("should not be null", WikiWordFile.getDataRoot());
+        WikiWordPageFile.setDataRoot(dataRoot);
+        WikiWordPageFile a = new WikiWordPageFile("test");
+        assertNotNull("should not be null", WikiWordPageFile.getDataRoot());
     }
 
     @Test

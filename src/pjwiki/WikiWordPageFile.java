@@ -14,9 +14,16 @@ import java.io.FileWriter;
  *
  * @author Patrick
  */
-public class WikiWordFile {
-
-    private WikiWord word;
+public class WikiWordPageFile extends WikiWordPageBase {
+    
+    WikiWordPageFile(WikiWord word) throws Exception
+    {
+        super(word);
+    }
+    WikiWordPageFile(String word) throws Exception
+    {
+        super(word);
+    }
 
     static String wordFileExtension = ".pwk";
     static String backupFileExtension = ".bak";
@@ -25,39 +32,14 @@ public class WikiWordFile {
 
     private static File dataRoot;
 
-    WikiWordFile(WikiWord word) throws Exception
-    {
-        this.word = word;
-        validate();
-    }
-    WikiWordFile(String wikiWordString) throws Exception
-    {
-        this.word = new WikiWord(wikiWordString);
-        validate();
-    }
-
-
-
-    /**
-     *
-     * @throws Exception
-     */
+    @Override
     public void validate() throws Exception
     {
-        Exception e = null;
+        super.validate();
         if(dataRoot == null)
         {
-            e = new Exception("Root data path is not configured");
+            throw new Exception("Root data path is not configured");
         }
-        else if(word == null)
-        {
-            e = new Exception("A wiki page is attempting to be read without a WikiWord provided");
-        }
-        else if(!word.isValid())
-        {
-            e = new Exception("The WikiWord associated with this wikipage is invalid");
-        }
-        if(e != null) throw e;
     }
 
     /**
@@ -67,27 +49,23 @@ public class WikiWordFile {
      */
     public String getWikiMarkup() throws Exception
     {
-        validate();
         String wordText = "";
         return wordText;
     }
 
     public boolean exists() throws Exception
     {
-        validate();
         return path().exists();
     }
 
     public void save(String content) throws Exception
     {
-        validate();
         if(content == null) content = "";
         writefile(path(), content);
     }
 
     public String load() throws Exception
     {
-        validate();
         if(exists())
         {
             return readfile(path());
@@ -107,7 +85,6 @@ public class WikiWordFile {
      */
     public boolean tryLockFor(String username) throws Exception
     {
-        validate();
         if(isModifiableFor(username))
         {
             writefile(path(lockFileExtension),
@@ -130,7 +107,6 @@ public class WikiWordFile {
      */
     public boolean isModifiableFor(String username) throws Exception
     {
-        validate();
         File lockfile = path(lockFileExtension);
 
         if(!lockfile.exists())
@@ -156,7 +132,6 @@ public class WikiWordFile {
      */
     public boolean unlockFor(String username) throws Exception
     {
-        validate();
         if(isModifiableFor(username))
         {
             path(lockFileExtension).delete();
@@ -171,7 +146,6 @@ public class WikiWordFile {
 
     private File path(String extension) throws Exception
     {
-        validate();
         if (extension == null) extension = wordFileExtension;
         return new File(dataRoot + word.toFilePath(File.separator) + extension);
     }
@@ -197,7 +171,7 @@ public class WikiWordFile {
         }
         else
         {
-            WikiWordFile.dataRoot = dataRoot;
+            WikiWordPageFile.dataRoot = dataRoot;
         }
     }
 

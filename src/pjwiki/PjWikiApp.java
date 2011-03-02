@@ -118,7 +118,7 @@ public class PjWikiApp extends SingleFrameApplication {
             Matcher m = dataPathPattern.matcher(line);
             if(m.matches())
             {
-                WikiWordFile.setDataRoot(new File(m.group(1)));
+                WikiWordPageFile.setDataRoot(new File(m.group(1)));
             }
             // TODO: load authentication driver setting
             // potential drivers:
@@ -129,7 +129,7 @@ public class PjWikiApp extends SingleFrameApplication {
         }
         in.close();
 
-        if(WikiWordFile.getDataRoot() == null)
+        if(WikiWordPageFile.getDataRoot() == null)
         {
             ParseException e = new ParseException("Settings file does not contain a datapath tag", 0);
             throw e;
