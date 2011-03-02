@@ -6,8 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this template, choose Tools | Templates
@@ -20,37 +18,19 @@ import java.util.logging.Logger;
  */
 public class WikiWordPageFile extends WikiWordPageBase {
     
-    WikiWordPageFile(WikiWord word) throws Exception
+    WikiWordPageFile(WikiWord word, WikiWordPageFileFactory factory) throws Exception
     {
         super(word);
+        this.factory = factory;
     }
-    WikiWordPageFile(String word) throws Exception
+    WikiWordPageFile(String word, WikiWordPageFileFactory factory) throws Exception
     {
         super(word);
+        this.factory = factory;
     }
-
-    static String wordFileExtension = ".pwk";
-    static String backupFileExtension = ".bak";
-    static String lockFileExtension = ".lock";
-    static String lockFileDelimeter = "|";
 
     private static File dataRoot;
 
-    @Override
-    public void validate() throws Exception
-    {
-        super.validate();
-        if(dataRoot == null)
-        {
-            throw new Exception("Root data path is not configured");
-        }
-    }
-
-    /**
-     *
-     * @return
-     * @throws Exception
-     */
     public String getWikiMarkup()
     {
         String wordText = "";
@@ -92,10 +72,10 @@ public class WikiWordPageFile extends WikiWordPageBase {
         if(isModifiableFor(username))
         {
             try {
-                writefile(path(lockFileExtension),
+                writefile(path(factory.lockFileExtension),
                         username +
-                        lockFileDelimeter + "0" +
-                        lockFileDelimeter + "0"
+                        factory.lockFileDelimeter + "0" +
+                        factory.lockFileDelimeter + "0"
                         );
             } catch (IOException ex) {
                 return false;
@@ -115,7 +95,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
      */
     public boolean isModifiableFor(String username)
     {
-        File lockfile = path(lockFileExtension);
+        File lockfile = path(factory.lockFileExtension);
 
         if(!lockfile.exists())
         {
@@ -126,7 +106,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
             String lockContents;
             try {
                 lockContents = readfile(lockfile);
-                String[] lockColumns = lockContents.split("\\"+lockFileDelimeter);
+                String[] lockColumns = lockContents.split("\\"+factory.lockFileDelimeter);
                 // USER|DATE|TIME
                 if(lockColumns[0].contentEquals(username))
                     return true;
@@ -147,7 +127,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
     {
         if(isModifiableFor(username))
         {
-            path(lockFileExtension).delete();
+            path(factory.lockFileExtension).delete();
             return true;
         }
         else
@@ -159,7 +139,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
 
     private File path(String extension)
     {
-        if (extension == null) extension = wordFileExtension;
+        if (extension == null) extension = factory.wordFileExtension;
         return new File(dataRoot + word.toFilePath(File.separator) + extension);
     }
     private File path() {return path(null);}
@@ -214,4 +194,6 @@ public class WikiWordPageFile extends WikiWordPageBase {
     public Integer[] getVersions() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    private WikiWordPageFileFactory factory;
 }

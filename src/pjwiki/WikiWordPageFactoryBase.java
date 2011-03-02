@@ -12,10 +12,14 @@ import java.util.Map;
  * @author Patrick
  */
 public abstract class WikiWordPageFactoryBase {
-
-    public abstract WikiWordPageBase getWikiWordPage(WikiWord word);
-    public abstract WikiWordPageBase getWikiWordPage(String word);
     
+    public WikiWordPageFactoryBase(Map<String, String> options) throws Exception
+    {   
+        this.options = options;
+    }
+
+    public abstract WikiWordPageBase getWikiWordPage(WikiWord word) throws Exception;
+    public abstract WikiWordPageBase getWikiWordPage(String word) throws Exception;
     
     public Map<String, String> getOptions() {
         return options;
@@ -28,5 +32,4 @@ public abstract class WikiWordPageFactoryBase {
     }
     protected Map<String, String> options;
     protected Map<String, String> defaultOptions;
-
 }
