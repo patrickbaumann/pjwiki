@@ -195,4 +195,9 @@ public class WikiWordPageFile extends WikiWordPageBase {
         fw.write(content);
         fw.close();
     }
+
+    @Override
+    public Integer[] getVersions() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
