@@ -2,8 +2,12 @@ package pjwiki;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this template, choose Tools | Templates
@@ -47,13 +51,13 @@ public class WikiWordPageFile extends WikiWordPageBase {
      * @return
      * @throws Exception
      */
-    public String getWikiMarkup() throws Exception
+    public String getWikiMarkup()
     {
         String wordText = "";
         return wordText;
     }
 
-    public boolean exists() throws Exception
+    public boolean exists()
     {
         return path().exists();
     }
@@ -83,15 +87,19 @@ public class WikiWordPageFile extends WikiWordPageBase {
      * @return
      * @throws Exception
      */
-    public boolean tryLockFor(String username) throws Exception
+    public boolean tryLockFor(String username)
     {
         if(isModifiableFor(username))
         {
-            writefile(path(lockFileExtension),
-                    username +
-                    lockFileDelimeter + "0" +
-                    lockFileDelimeter + "0"
-                    );
+            try {
+                writefile(path(lockFileExtension),
+                        username +
+                        lockFileDelimeter + "0" +
+                        lockFileDelimeter + "0"
+                        );
+            } catch (IOException ex) {
+                return false;
+            }
             return true;
         }
         else
@@ -105,7 +113,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
      * @return
      * @throws Exception
      */
-    public boolean isModifiableFor(String username) throws Exception
+    public boolean isModifiableFor(String username)
     {
         File lockfile = path(lockFileExtension);
 
@@ -115,13 +123,18 @@ public class WikiWordPageFile extends WikiWordPageBase {
         }
         else
         {
-            String lockContents = readfile(lockfile);
-            String[] lockColumns = lockContents.split("\\"+lockFileDelimeter);
-            // USER|DATE|TIME
-            if(lockColumns[0].contentEquals(username))
-                return true;
-            else
+            String lockContents;
+            try {
+                lockContents = readfile(lockfile);
+                String[] lockColumns = lockContents.split("\\"+lockFileDelimeter);
+                // USER|DATE|TIME
+                if(lockColumns[0].contentEquals(username))
+                    return true;
+                else
+                    return false;
+            } catch (Exception ex) {
                 return false;
+            }
         }
     }
     /**
@@ -130,7 +143,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
      * @return
      * @throws Exception
      */
-    public boolean unlockFor(String username) throws Exception
+    public boolean unlockFor(String username)
     {
         if(isModifiableFor(username))
         {
@@ -144,12 +157,13 @@ public class WikiWordPageFile extends WikiWordPageBase {
     }
 
 
-    private File path(String extension) throws Exception
+    private File path(String extension)
     {
         if (extension == null) extension = wordFileExtension;
         return new File(dataRoot + word.toFilePath(File.separator) + extension);
     }
-    private File path() throws Exception{return path(null);}
+    private File path() {return path(null);}
+            
 
     /**
      *
@@ -175,7 +189,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
         }
     }
 
-    private String readfile(File f) throws Exception
+    private String readfile(File f) throws FileNotFoundException, IOException
     {
         BufferedReader in = new BufferedReader( new FileReader(f));
         String ret = "";
@@ -189,7 +203,7 @@ public class WikiWordPageFile extends WikiWordPageBase {
         return ret;
         
     }
-    private void writefile(File f, String content) throws Exception
+    private void writefile(File f, String content) throws IOException
     {
         FileWriter fw = new FileWriter(f); // do not append
         fw.write(content);
