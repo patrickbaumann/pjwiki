@@ -15,7 +15,7 @@ public abstract class WikiWordPageFactoryBase {
     
     public WikiWordPageFactoryBase(Map<String, String> options) throws Exception
     {   
-        this.options = options;
+        setOptions(options);
     }
 
     public abstract WikiWordPageBase getWikiWordPage(WikiWord word) throws Exception;
@@ -24,9 +24,14 @@ public abstract class WikiWordPageFactoryBase {
     public Map<String, String> getOptions() {
         return options;
     }
-    public void setOptions(Map<String, String> options) {
+    public void setOptions(Map<String, String> options) throws Exception
+    {
         this.options = options;
-    }   
+        validateOptions();
+    }
+    
+    public abstract void validateOptions() throws Exception;
+    
     public Map<String, String> getDefaultOptions() {
         return defaultOptions;
     }

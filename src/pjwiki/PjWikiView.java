@@ -41,9 +41,17 @@ public class PjWikiView extends FrameView {
      *
      * @param app
      */
-    public PjWikiView(SingleFrameApplication app, WikiWord launchWithWikiWord) throws Exception {
+    public PjWikiView(
+            SingleFrameApplication app,
+            WikiWordPageFactoryBase pageFactory,
+            WikiWord launchWithWikiWord) throws Exception
+    {
         super(app);
 
+        this.pageFactory = pageFactory;
+        
+        
+        
         initComponents();
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
@@ -108,8 +116,10 @@ public class PjWikiView extends FrameView {
         }
 
         externalProtocols = new ArrayList<String>();
-        externalProtocols.add("http");externalProtocols.add("https");
-        externalProtocols.add("ftp");externalProtocols.add("file");
+        externalProtocols.add("http");
+        externalProtocols.add("https");
+        externalProtocols.add("ftp");
+        externalProtocols.add("file");
         externalProtocols.add("mail");
 
         currentText =
@@ -556,7 +566,7 @@ public class PjWikiView extends FrameView {
                     {
                         case 0: //yes
                             try{
-                                (new WikiWordPageFile(WikiWord.current)).save(contentTextPane.getText());
+                                pageFactory.getWikiWordPage(WikiWord.current).save(contentTextPane.getText());
                             }catch(Exception e)
                             {
                                 displayException(e);
@@ -581,7 +591,7 @@ public class PjWikiView extends FrameView {
                 // TODO: CODE THIS METHOD
                 // see if current wiki word exists
                 try{
-                    WikiWordPageFile wwf = new WikiWordPageFile(WikiWord.current);
+                    WikiWordPageBase wwf = pageFactory.getWikiWordPage(WikiWord.current);
                     if(!wwf.exists())
                     {
                         // ask if user would like to create
@@ -621,7 +631,7 @@ public class PjWikiView extends FrameView {
                 break;
             case EDIT:
                 try{
-                    WikiWordPageFile wwf = new WikiWordPageFile(WikiWord.current);
+                    WikiWordPageBase wwf = pageFactory.getWikiWordPage(WikiWord.current);
                     // see if current wiki word is modifiable
                     if(wwf.isModifiableFor(PjWikiApp.getApplication().getUsername()))
                     {
@@ -752,6 +762,6 @@ public class PjWikiView extends FrameView {
     private state editState;
     private String currentText;
     private WikiSyntaxManager wikiSyntaxManager;
-
+    private WikiWordPageFactoryBase pageFactory;
     private List<String> externalProtocols;
 }

@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -66,7 +68,7 @@ public class PjWikiApp extends SingleFrameApplication {
     @Override protected void startup() {
         try {
             loadSettings(optionsPath);
-            show(new PjWikiView(this, launchWithWikiWord));
+            show(new PjWikiView(this, pageFactory, launchWithWikiWord));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Launch issue: " + ex.getMessage());
             this.exit();
@@ -98,7 +100,7 @@ public class PjWikiApp extends SingleFrameApplication {
         launch(PjWikiApp.class, args);
     }
 
-    static Pattern dataPathPattern = Pattern.compile("^<datapath>([^<]+)</datapath>$");
+    static Pattern optionPattern = Pattern.compile("^<([^>]+)>([^<]+)</(\\1)>$");
     /**
      * 
      * @param settingsFile
@@ -110,34 +112,35 @@ public class PjWikiApp extends SingleFrameApplication {
     {
         BufferedReader in;
         String line;
-
+        
+        Map<String, String> options = new HashMap<String, String>();
+        
         // Load target connections
         in = new BufferedReader( new FileReader(settingsFile));
         while(null != (line = in.readLine()))
         {
-            Matcher m = dataPathPattern.matcher(line);
+            Matcher m = optionPattern.matcher(line);
             if(m.matches())
             {
-                WikiWordPageFile.setDataRoot(new File(m.group(1)));
+                options.put(m.group(1), m.group(2));
             }
-            // TODO: load authentication driver setting
-            // potential drivers:
-                // plain text username / dropdown
-                // System.getProperty("user.name")
-                // oauth?
-                // etc.
         }
         in.close();
-
-        if(WikiWordPageFile.getDataRoot() == null)
+        
+        String datatype = options.get("datatype");
+        if(datatype.equalsIgnoreCase("file"))
         {
-            ParseException e = new ParseException("Settings file does not contain a datapath tag", 0);
-            throw e;
+            pageFactory = new WikiWordPageFileFactory(options);
+        }
+        else
+        {
+            throw new Exception("No data type specified in options file!");
         }
     }
 
     private String optionsPath;
     private WikiWord launchWithWikiWord;
+    public WikiWordPageFactoryBase pageFactory;
 
     private String username;
     public String getUsername() {

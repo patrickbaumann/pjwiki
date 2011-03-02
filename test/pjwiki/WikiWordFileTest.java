@@ -5,8 +5,9 @@
 
 package pjwiki;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,7 @@ import static org.junit.Assert.*;
 public class WikiWordFileTest {
 
     static File temppath ;
+    static WikiWordPageFactoryBase factory;
 
     public WikiWordFileTest() {
         try {
@@ -44,11 +46,13 @@ public class WikiWordFileTest {
     @Before
     public void setUp() throws Exception {
         temppath.mkdirs();
-        WikiWordPageFile.setDataRoot(temppath);
-
-        WikiWordPageFile wwf = new WikiWordPageFile("testing");
+        Map<String, String> options = new HashMap<String, String>();
+        options.put("datapath", temppath.getPath());
+        
+        factory = new WikiWordPageFileFactory(options);
+        
+        WikiWordPageBase wwf = factory.getWikiWordPage("testing");
         wwf.save("TESTING");
-        System.out.println(WikiWordPageFile.getDataRoot());
     }
 
     @After
@@ -67,19 +71,21 @@ public class WikiWordFileTest {
      */
     @Test
     public void testValidate() throws Exception {
-        WikiWordPageFile instance;
-        //WikiWordFile.setDataRoot(null);
-
-        WikiWordPageFile.setDataRoot(new File("."));
+        WikiWordPageBase instance;
+        
+        Map<String, String> options = new HashMap<String, String>();
+        options.put("datapath", ".");
+        
+        factory.setOptions(options);
         try{
-            instance = new WikiWordPageFile((WikiWord)null);
+            instance = factory.getWikiWordPage((WikiWord)null);
             fail("Should have thrown exception for being a bad word");
         }catch(Exception e)
         {
             assertTrue(e.getMessage().contains("WikiWord"));
         }
         try{
-            instance = new WikiWordPageFile("Index");
+            instance = factory.getWikiWordPage("Index");
         }catch(Exception e)
         {
             fail("Completely valid word should not fail!");
@@ -90,7 +96,7 @@ public class WikiWordFileTest {
     public void testSaveAndLoad() throws Exception {
         System.out.println("saveWikiMarkup");
         String contents = "thisisatestoftheemergency\r\n\r\ntest\r\ntesttest\r\n";
-        WikiWordPageFile instance = new WikiWordPageFile("imawesome");
+        WikiWordPageBase instance = factory.getWikiWordPage("imawesome");
         instance.save(contents);
         String loaded = instance.load();
         assertEquals(contents, loaded);
@@ -101,7 +107,7 @@ public class WikiWordFileTest {
      */
     @Test
     public void testLockAndModifiable() throws Exception {
-        WikiWordPageFile instance = new WikiWordPageFile("testing");
+        WikiWordPageBase instance = factory.getWikiWordPage("testing");
         
         assertTrue("Anyone can edit an unlocked file", instance.isModifiableFor("Patrick"));
         assertTrue("Anyone can edit an unlocked file", instance.isModifiableFor("Jonathon"));
@@ -113,18 +119,6 @@ public class WikiWordFileTest {
         assertTrue("Patrick should be able to unlock his locked file", instance.unlockFor("Patrick"));
         assertTrue("Anyone can edit an unlocked file", instance.isModifiableFor("Patrick"));
         assertTrue("Anyone can edit an unlocked file", instance.isModifiableFor("Jonathon"));
-    }
-
-    /**
-     * Test of setDataRoot method, of class WikiWordFile.
-     */
-    @Test
-    public void testSetDataRoot() throws Exception {
-        System.out.println("setDataRoot");
-        File dataRoot = new File(".");
-        WikiWordPageFile.setDataRoot(dataRoot);
-        WikiWordPageFile a = new WikiWordPageFile("test");
-        assertNotNull("should not be null", WikiWordPageFile.getDataRoot());
     }
 
     @Test

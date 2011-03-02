@@ -29,8 +29,6 @@ public class WikiWordPageFile extends WikiWordPageBase {
         this.factory = factory;
     }
 
-    private static File dataRoot;
-
     public String getWikiMarkup()
     {
         String wordText = "";
@@ -140,34 +138,15 @@ public class WikiWordPageFile extends WikiWordPageBase {
     private File path(String extension)
     {
         if (extension == null) extension = factory.wordFileExtension;
-        return new File(dataRoot + word.toFilePath(File.separator) + extension);
+        return new File(factory.dataRoot + word.toFilePath(File.separator) + extension);
     }
     private File path() {return path(null);}
             
-
-    /**
-     *
-     * @return
-     */
-    public static File getDataRoot() {
-        return dataRoot;
-    }
     /**
      *
      * @param dataRoot
      * @throws Exception
      */
-    public static void setDataRoot(File dataRoot) throws Exception {
-        if(!dataRoot.isDirectory())
-        {
-            Exception e = new Exception("path is not a directory");
-            throw e;
-        }
-        else
-        {
-            WikiWordPageFile.dataRoot = dataRoot;
-        }
-    }
 
     private String readfile(File f) throws FileNotFoundException, IOException
     {
