@@ -146,4 +146,5 @@ public class PjWikiApp extends SingleFrameApplication {
     public String getUsername() {
         return username;
     }
+
 }

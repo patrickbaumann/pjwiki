@@ -34,8 +34,13 @@ import javax.swing.text.StyledEditorKit;
  */
 public class PjWikiView extends FrameView {
 
-    // TODO: Implement lobo / cobra browser in place of text pane
-
+    private WikiWordPageBase currentWikiWordPage;
+    private List<WikiWordPageBase> history;
+    private WikiSyntaxManager wikiSyntaxManager;
+    private WikiWordPageFactoryBase pageFactory;
+    private List<String> externalProtocols;
+    private PjWikiStateMachine stateMachine;
+    private String currentText;
 
     /**
      *
@@ -49,9 +54,6 @@ public class PjWikiView extends FrameView {
         super(app);
 
         this.pageFactory = pageFactory;
-        
-        
-        
         initComponents();
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
@@ -110,9 +112,9 @@ public class PjWikiView extends FrameView {
 
         if(launchWithWikiWord != null)
         {
-            WikiWord.current = launchWithWikiWord;
+            currentWikiWordPage = pageFactory.getWikiWordPage(launchWithWikiWord);
         } else {
-            WikiWord.current = new WikiWord(WikiWord.INDEX_TEXT);
+            currentWikiWordPage = pageFactory.getWikiWordPage(WikiWord.INDEX_TEXT);
         }
 
         externalProtocols = new ArrayList<String>();
@@ -133,11 +135,11 @@ public class PjWikiView extends FrameView {
                 "===== subsection3 =====\r\n" +
                 "Need to add paragraph handling and such\r\n";
 
-        history = new ArrayList<WikiWord>();
-        historyLocation = history.listIterator();
-
+        history = new ArrayList<WikiWordPageBase>();
         wikiSyntaxManager = new WikiSyntaxManager();
-        enterState(state.VIEW);
+        stateMachine = new PjWikiStateMachine(this);
+        
+        stateMachine.transition(new PjWikiStateMachine.Navigate(currentWikiWordPage));        
     }
 
     /**
@@ -583,119 +585,9 @@ public class PjWikiView extends FrameView {
         return true;
     }
 
-    private boolean enterState(state s)
-    {
-        switch(s)
-        {
-            case VIEW:
-                // TODO: CODE THIS METHOD
-                // see if current wiki word exists
-                try{
-                    WikiWordPageBase wwf = pageFactory.getWikiWordPage(WikiWord.current);
-                    if(!wwf.exists())
-                    {
-                        // ask if user would like to create
-                        int n = displayYesNoCancel(
-                                "Create?", "The "+ WikiWord.current +" WikiWord does not exist. Would you like to create it?");
-                            // true: enterState(EDIT)
-                        switch(n)
-                        {
-                            case 0: //yes
-                                enterState(editState.EDIT);
-                                return true;
-                            case 1: //no
-                            case 2: //cancel
-                                // false: return to previous in history
-                                if(historyLocation.hasPrevious())
-                                {
-                                    WikiWord.current = historyLocation.previous();
-                                }
-                                else
-                                {
-                                    //TODO: (remove comment) throw new Exception("You cannot go back in history!");
-                                }
-                                // exception (no history): display error
-                                return false;
-                        }
-                    }
-                    // if nothing has gone wrong, let's read the file contents
-                    saveToHistory();
-                    currentText = wwf.load();
-                }
-                catch(Exception e)
-                {
-                    displayException(e);
-                    return false;
-                }
-                displayState(s);
-                break;
-            case EDIT:
-                try{
-                    WikiWordPageBase wwf = pageFactory.getWikiWordPage(WikiWord.current);
-                    // see if current wiki word is modifiable
-                    if(wwf.isModifiableFor(PjWikiApp.getApplication().getUsername()))
-                    {
-                        // true: see if word exists
-                        if(wwf.exists())
-                        {
-                            // true: load contents into currentText
-                            currentText = wwf.load();
-                        }
-                        else
-                        {
-                            // false: set currentText to empty string
-                            currentText = "======"+WikiWord.current.name()+"======\n";
-                        }
-                    }
-                    else
-                    {
-                        // false: Alert user and return to previous word
-                        displayMessage("You cannot modify this word at this time", JOptionPane.OK_OPTION);
-                        return false;
-                    }
-                }
-                catch(Exception e)
-                {
-                    displayException(e);
-                    return false;
-                }
-                break;
-        }
-
-        // all worked out, no return falses: let's set the current state and return true;
-        displayState(s);
-        editState = s;
-        return true;
-    }
-
     private void displayState(state s)
     {
-        GridLayout l = (GridLayout)contentToolbarPane.getLayout();
-        Dimension d = contentToolbar.getPreferredSize();
-        if(s == state.VIEW)
-        {
-            if(editToolbar.getParent() != null)
-            {
-                contentToolbarPane.remove(editToolbar);
-            }
-            d.height = 27;
-            l.setRows(1);
-        }
-        else if(s == state.EDIT )
-        {
-            l.setRows(2);
-            d.height = 52;
-            if(editToolbar.getParent() == null)
-            {
-                contentToolbarPane.add(editToolbar);
-            }
-        }
 
-        renderText();
-
-        contentToolbar.setPreferredSize(d);
-        contentPanel.revalidate();
-        contentPanel.repaint();
     }
 
     public void displayPreview(boolean preview)
@@ -728,23 +620,23 @@ public class PjWikiView extends FrameView {
         return n;
     }
 
-    private void saveToHistory()
+    public void showViewing()
     {
-        if(!historyLocation.hasNext() || historyLocation.next() != WikiWord.current)
-        {
-            historyLocation.previous();
-            while(historyLocation.hasNext())
-            {
-                historyLocation.next();
-                historyLocation.remove();
-            }
-            historyLocation.add(WikiWord.current);
-        }
-    }
     
-    public void showViewing(){}
-    public void showEditing(){}
-    public void showPreviewing(){}
+    }
+    public void showEditing()
+    {
+    
+    }
+    public void showPreviewing()
+    {
+    
+    }
+    public void setCurrentWikiWordPage(WikiWordPageBase word)
+    {
+        
+        this.currentWikiWordPage = word;
+    }
 
     private final Timer messageTimer;
     private final Timer busyIconTimer;
@@ -754,17 +646,4 @@ public class PjWikiView extends FrameView {
 
     private JDialog aboutBox;
 
-    private List<WikiWord> history;
-    private ListIterator<WikiWord> historyLocation;
-
-    enum state{
-        VIEW,
-        EDIT;
-        // not including preview as it's a sub-state of edit
-    }
-    private state editState;
-    private String currentText;
-    private WikiSyntaxManager wikiSyntaxManager;
-    private WikiWordPageFactoryBase pageFactory;
-    private List<String> externalProtocols;
 }

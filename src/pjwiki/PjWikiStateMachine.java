@@ -11,160 +11,162 @@ package pjwiki;
  */
 public class PjWikiStateMachine
 {
-    State currentState = new Viewing();
-    
-    public boolean transition(Transition transition) throws Exception
+    public PjWikiStateMachine(PjWikiView view)
     {
-        try
-        {
-            currentState.transition(transition);
-            return true;
-        } catch (Exception e){
-            return false;
-        }
+        this.view = view;
     }
     
+    PjWikiView view;
+    State currentState = new Viewing();
     
-    public class Transition{
-        public WikiWord word;
-        Transition(WikiWord word)
-        {
-            this.word = word;
-        }
-    };
-    public class Navigate extends Transition {public Navigate(WikiWord word){super(word);}};
-    public class Edit extends Transition {public Edit(WikiWord word){super(word);}};
-    public class Cancel extends Transition {public Cancel(WikiWord word){super(word);}};
-    public class Save extends Transition {public Save(WikiWord word){super(word);}};
-    public class Preview extends Transition {public Preview(WikiWord word){super(word);}};
-    public class Exit extends Transition {public Exit(WikiWord word){super(word);}};
+    public State transitionNavigate(WikiWordPageBase word) throws Exception
+        { return currentState.transitionNavigate(word); }
+    public State transitionEdit(WikiWordPageBase word) throws Exception
+        { return currentState.transitionEdit(word);  }
+    public State transitionCancel(WikiWordPageBase word) throws Exception
+        { return currentState.transitionCancel(word);  }
+    public State transitionSave(WikiWordPageBase word) throws Exception
+        { return currentState.transitionSave(word);  }
+    public State transitionPreview(WikiWordPageBase word) throws Exception
+        { return currentState.transitionPreview(word);  }
+    public State transitionExit(WikiWordPageBase word) throws Exception
+        { return currentState.transitionExit(word);  }
     
-    private abstract class State
+    public abstract class State
     {
-        public abstract State transition(Navigate transition) throws Exception;
-        public abstract State transition(Edit transition) throws Exception;
-        public abstract State transition(Cancel transition) throws Exception;
-        public abstract State transition(Save transition) throws Exception;
-        public abstract State transition(Preview transition) throws Exception;
-        public abstract State transition(Exit transition) throws Exception;
-        public State transition(Transition transition) throws Exception
-        {
-            if(transition instanceof Navigate)
-            {   return transition((Navigate)transition); }
-            else if(transition instanceof Edit)
-            {   return transition((Edit)transition); }
-            else if(transition instanceof Cancel)
-            {   return transition((Cancel)transition); }
-            else if(transition instanceof Save)
-            {   return transition((Save)transition); }
-            else if(transition instanceof Preview)
-            {   return transition((Preview)transition); }
-            else if(transition instanceof Exit)
-            {   return transition((Exit)transition); }
-            else { throw new Exception("Invalid transition!"); }
-        }
+        public abstract State transitionNavigate(WikiWordPageBase word) throws Exception;
+        public abstract State transitionEdit(WikiWordPageBase word) throws Exception;
+        public abstract State transitionCancel(WikiWordPageBase word) throws Exception;
+        public abstract State transitionSave(WikiWordPageBase word) throws Exception;
+        public abstract State transitionPreview(WikiWordPageBase word) throws Exception;
+        public abstract State transitionExit(WikiWordPageBase word) throws Exception;
     }
     
     public class Viewing extends State
     {
+        public Viewing()
+        {
+            
+        }
 
         @Override
-        public State transition(Navigate transition) throws Exception {
+        public State transitionNavigate(WikiWordPageBase word) throws Exception {
+            if(word.exists())
+            {
+                view.setCurrentWikiWordPage(word);
+                view.showViewing();
+                return this;
+            }
+            else
+            {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }
+
+        @Override
+        public State transitionEdit(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Edit transition) throws Exception {
+        public State transitionCancel(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Cancel transition) throws Exception {
+        public State transitionSave(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Save transition) throws Exception {
+        public State transitionPreview(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Preview transition) throws Exception {
+        public State transitionExit(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        @Override
-        public State transition(Exit transition) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
     }
     
     public class Editing extends State
     {
+        public Editing()
+        {
+        
+        }
 
         @Override
-        public State transition(Navigate transition) throws Exception {
+        public State transitionNavigate(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Edit transition) throws Exception {
+        public State transitionEdit(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Cancel transition) throws Exception {
+        public State transitionCancel(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Save transition) throws Exception {
+        public State transitionSave(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Preview transition) throws Exception {
+        public State transitionPreview(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Exit transition) throws Exception {
+        public State transitionExit(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
     }
 
     public class Previewing extends State
     {
+        public Previewing()
+        {
+            
+        }
 
         @Override
-        public State transition(Navigate transition) throws Exception {
+        public State transitionNavigate(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Edit transition) throws Exception {
+        public State transitionEdit(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Cancel transition) throws Exception {
+        public State transitionCancel(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Save transition) throws Exception {
+        public State transitionSave(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Preview transition) throws Exception {
+        public State transitionPreview(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public State transition(Exit transition) throws Exception {
+        public State transitionExit(WikiWordPageBase word) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
     }
 
 }
