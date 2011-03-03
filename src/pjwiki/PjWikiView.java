@@ -741,7 +741,10 @@ public class PjWikiView extends FrameView {
             historyLocation.add(WikiWord.current);
         }
     }
-
+    
+    public void showViewing(){}
+    public void showEditing(){}
+    public void showPreviewing(){}
 
     private final Timer messageTimer;
     private final Timer busyIconTimer;
