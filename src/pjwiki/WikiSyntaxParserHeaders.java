@@ -91,6 +91,7 @@ public class WikiSyntaxParserHeaders extends WikiSyntaxParserBase{
     @Override
     public String execute(String text)
     {
+        headerRoot = new headerNode("", 0);
         Matcher m = headers.matcher(text);
         while(m.find())
         {

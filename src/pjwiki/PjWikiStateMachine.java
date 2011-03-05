@@ -63,6 +63,7 @@ public class PjWikiStateMachine
             {
                 if(view.displayCreateNewWordDialog(word))
                 {
+                    view.loadContent();
                     return new Editing();
                 }
                 else if(view.setCurrentWikiWordPageFromHistory(-1))
@@ -194,12 +195,19 @@ public class PjWikiStateMachine
 
         @Override
         public State transitionCancel(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return new Viewing();
         }
 
         @Override
         public State transitionSave(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(view.saveCurrentWord())
+            {
+                return new Viewing();
+            }
+            else
+            {
+                return this;
+            }
         }
 
         @Override
@@ -209,7 +217,15 @@ public class PjWikiStateMachine
 
         @Override
         public State transitionExit(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(view.displaySaveChangesDialoge())
+            {
+                return null;
+            }
+            else
+            {
+                return this;
+            }
+           
         }
 
     }

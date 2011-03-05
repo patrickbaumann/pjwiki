@@ -38,7 +38,8 @@ public class PjWikiView extends FrameView {
     private WikiWordPageFactoryBase pageFactory;
     private List<String> externalProtocols;
     private PjWikiStateMachine stateMachine;
-    private String currentText;
+    private String loadedText;
+    private String previewText;
 
     /**
      *
@@ -424,7 +425,13 @@ public class PjWikiView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 
     private void navGoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navGoButtonActionPerformed
-
+        try{
+            stateMachine.transitionNavigate(pageFactory.getWikiWordPage(navLocationTextField1.getText()));
+        }
+        catch ( Exception e)
+        {
+            displayException(e);
+        }
     }//GEN-LAST:event_navGoButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
@@ -540,9 +547,9 @@ public class PjWikiView extends FrameView {
     
     public void loadContent() throws Exception
     {
-        currentText = currentWikiWordPage.load();
-        if(currentText == null)
-            currentText = "";
+        previewText = loadedText = currentWikiWordPage.load();
+        if(loadedText == null)
+            loadedText = "";
     }
     public void showViewing()
     {
@@ -550,7 +557,7 @@ public class PjWikiView extends FrameView {
             loadContent();
             WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
             WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
-            String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(currentText));
+            String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(loadedText));
             //contentTextPane.setContentType("text/html");
             contentTextPane.setEditable(false);
             contentTextPane.setContentType("text/html");
@@ -569,7 +576,7 @@ public class PjWikiView extends FrameView {
         try{
             contentTextPane.setEditorKit(new StyledEditorKit());
             contentTextPane.setEditable(true);
-            contentTextPane.setText(currentText);
+            contentTextPane.setText(previewText);
         }catch(Exception e){
             displayException(e);
         }
@@ -577,11 +584,11 @@ public class PjWikiView extends FrameView {
     }
     public void showPreviewing()
     {
+        previewText = contentTextPane.getText(); // store for retrieval in edit mode
         try{
             WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
             WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
             String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(contentTextPane.getText()));
-            //contentTextPane.setContentType("text/html");
             contentTextPane.setEditable(false);
             contentTextPane.setContentType("text/html");
             File tempFile = File.createTempFile("wiki", ".html");
@@ -616,7 +623,7 @@ public class PjWikiView extends FrameView {
     }
     boolean displaySaveChangesDialoge() {
         boolean saveSucceeded = true;
-        if(contentTextPane.getText() != currentText)
+        if(contentTextPane.getText() != loadedText)
         {
             int response = displayYesNoCancel
                     ("Save changes?",

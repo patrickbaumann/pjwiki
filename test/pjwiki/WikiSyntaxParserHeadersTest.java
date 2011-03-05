@@ -64,4 +64,31 @@ public class WikiSyntaxParserHeadersTest {
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
     }
+    
+    @Test
+    public void testDoubleRun()
+    {
+        System.out.println("prepare");
+        String text = 
+                "======Test======\r\n" +
+                "test test\r\n" +
+                "==== testing  ====   \r\n" +
+                "test";
+        WikiSyntaxParserHeaders instance = new WikiSyntaxParserHeaders();
+        String expResult = 
+                "<div id=\"TOC\">\r\n" +
+                "  * [[#test|Test]]\r\n" +
+                "      * [[#test_testing|testing]]\r\n" +
+                "</div>\r\n" +
+                "<a name=\"test\"><h1>Test</h1></a>\r\n" +
+                "test test\r\n" +
+                "<a name=\"test_testing\"><h3>testing</h3></a>\r\n" +
+                "test";
+        String result = instance.execute(text);
+        instance.execute(text);
+        System.out.println(expResult);
+        System.out.println(result);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.        
+    }
 }
