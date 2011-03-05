@@ -5,8 +5,6 @@
 
 package pjwiki;
 
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author Patrick
@@ -122,7 +120,7 @@ public class PjWikiViewStateMachine
 
         @Override
         public State transitionNavigate(WikiWordPageBase word) throws Exception {
-            if(view.displaySaveChangesDialoge())
+            if(view.displaySaveChangesDialog())
             {
                 return new Viewing(); // load and display current text
             }
@@ -162,7 +160,7 @@ public class PjWikiViewStateMachine
 
         @Override
         public State transitionExit(WikiWordPageBase word) throws Exception {
-            if(view.displaySaveChangesDialoge())
+            if(view.displaySaveChangesDialog())
             {
                 return null;
             }
@@ -217,7 +215,7 @@ public class PjWikiViewStateMachine
 
         @Override
         public State transitionExit(WikiWordPageBase word) throws Exception {
-            if(view.displaySaveChangesDialoge())
+            if(view.displaySaveChangesDialog())
             {
                 return null;
             }
