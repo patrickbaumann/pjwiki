@@ -5,6 +5,8 @@
 
 package pjwiki;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Patrick
@@ -14,23 +16,24 @@ public class PjWikiStateMachine
     public PjWikiStateMachine(PjWikiView view)
     {
         this.view = view;
+        currentState = new Viewing();
     }
     
+    State currentState;
     PjWikiView view;
-    State currentState = new Viewing();
     
-    public State transitionNavigate(WikiWordPageBase word) throws Exception
-        { return currentState.transitionNavigate(word); }
-    public State transitionEdit(WikiWordPageBase word) throws Exception
-        { return currentState.transitionEdit(word);  }
-    public State transitionCancel(WikiWordPageBase word) throws Exception
-        { return currentState.transitionCancel(word);  }
-    public State transitionSave(WikiWordPageBase word) throws Exception
-        { return currentState.transitionSave(word);  }
-    public State transitionPreview(WikiWordPageBase word) throws Exception
-        { return currentState.transitionPreview(word);  }
-    public State transitionExit(WikiWordPageBase word) throws Exception
-        { return currentState.transitionExit(word);  }
+    public void transitionNavigate(WikiWordPageBase word) throws Exception
+        { currentState = currentState.transitionNavigate(word); }
+    public void transitionEdit(WikiWordPageBase word) throws Exception
+        { currentState = currentState.transitionEdit(word);  }
+    public void transitionCancel(WikiWordPageBase word) throws Exception
+        { currentState = currentState.transitionCancel(word);  }
+    public void transitionSave(WikiWordPageBase word) throws Exception
+        { currentState = currentState.transitionSave(word);  }
+    public void transitionPreview(WikiWordPageBase word) throws Exception
+        { currentState = currentState.transitionPreview(word);  }
+    public void transitionExit(WikiWordPageBase word) throws Exception
+        { currentState = currentState.transitionExit(word);  }
     
     public abstract class State
     {
@@ -46,7 +49,7 @@ public class PjWikiStateMachine
     {
         public Viewing()
         {
-            
+            view.showViewing();
         }
 
         @Override
@@ -54,17 +57,13 @@ public class PjWikiStateMachine
             if(word.exists())
             {
                 view.setCurrentWikiWordPage(word);
-                view.loadContent();
-                view.showViewing();
                 return new Viewing();
             }
             else
             {
                 if(view.displayCreateNewWordDialog(word))
                 {
-                    word.save("");
-                    view.setCurrentWikiWordPage(word);
-                    return new Viewing();
+                    return new Editing();
                 }
                 else if(view.setCurrentWikiWordPageFromHistory(-1))
                 {
@@ -82,7 +81,6 @@ public class PjWikiStateMachine
             if(word.exists())
             {
                 view.loadContent();
-                view.showEditing();
                 return new Editing();
             }
             else
@@ -111,19 +109,26 @@ public class PjWikiStateMachine
             PjWikiApp.getApplication().exit();
             return null;
         }
-
     }
     
     public class Editing extends State
     {
         public Editing()
         {
-        
+            view.showEditing();
+            System.out.println("Editing");
         }
 
         @Override
         public State transitionNavigate(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(view.displaySaveChangesDialoge())
+            {
+                return new Viewing(); // load and display current text
+            }
+            else
+            {
+                return this;
+            }
         }
 
         @Override
@@ -133,23 +138,37 @@ public class PjWikiStateMachine
 
         @Override
         public State transitionCancel(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return new Viewing();
         }
 
         @Override
         public State transitionSave(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(view.saveCurrentWord())
+            {
+                return this;
+            }
+            else
+            {
+                return new Viewing();
+            }
+            
         }
 
         @Override
         public State transitionPreview(WikiWordPageBase word) throws Exception {
-            view.showPreviewing();
             return new Previewing();
         }
 
         @Override
         public State transitionExit(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(view.displaySaveChangesDialoge())
+            {
+                return null;
+            }
+            else
+            {
+                return this;
+            }
         }
 
     }
@@ -158,7 +177,8 @@ public class PjWikiStateMachine
     {
         public Previewing()
         {
-            
+            view.showPreviewing();
+            System.out.println("Previewing");
         }
 
         @Override

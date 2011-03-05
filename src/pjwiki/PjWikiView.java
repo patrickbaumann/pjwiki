@@ -4,8 +4,6 @@
 
 package pjwiki;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
@@ -128,8 +125,21 @@ public class PjWikiView extends FrameView {
         history = new ArrayList<WikiWordPageBase>();
         wikiSyntaxManager = new WikiSyntaxManager();
         stateMachine = new PjWikiStateMachine(this);
-        
-        stateMachine.transitionNavigate(currentWikiWordPage);      
+    }
+
+    public boolean saveCurrentWord() {
+        boolean saveSucceeded;
+        try
+        {
+            currentWikiWordPage.save(contentTextPane.getText());
+            saveSucceeded = true;
+        }
+        catch(Exception e)
+        {
+            displayException(e);
+            saveSucceeded = false;
+        }
+        return saveSucceeded;
     }
 
     /**
@@ -299,6 +309,11 @@ public class PjWikiView extends FrameView {
 
         jButton1.setText(resourceMap.getString("previewButton.text")); // NOI18N
         jButton1.setName("previewButton"); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         editToolbar.add(jButton1);
 
         contentToolbarPane.add(editToolbar);
@@ -413,12 +428,11 @@ public class PjWikiView extends FrameView {
     }//GEN-LAST:event_navGoButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-   //     if(editState == state.VIEW)
-   //     { 
-   //         enterState(state.EDIT);
-   //     }else{
-  //          enterState(state.VIEW);
-   //     }
+        try {
+            stateMachine.transitionEdit(currentWikiWordPage);
+        } catch (Exception ex) {
+            displayException(ex);
+        }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void contentToolbarComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_contentToolbarComponentRemoved
@@ -458,6 +472,14 @@ public class PjWikiView extends FrameView {
         }
     }//GEN-LAST:event_navLocationTextField1KeyReleased
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            stateMachine.transitionPreview(currentWikiWordPage);
+        } catch (Exception ex) {
+            displayException(ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
     private javax.swing.JScrollPane contentScrollPane;
@@ -494,6 +516,7 @@ public class PjWikiView extends FrameView {
     {
         displayMessage(e.getMessage(), JOptionPane.ERROR_MESSAGE);
     }
+    
     private void displayMessage(String s, int JOptionPaneType)
     {
         JOptionPane.showMessageDialog(this.getFrame(),
@@ -518,10 +541,13 @@ public class PjWikiView extends FrameView {
     public void loadContent() throws Exception
     {
         currentText = currentWikiWordPage.load();
+        if(currentText == null)
+            currentText = "";
     }
     public void showViewing()
     {
         try{
+            loadContent();
             WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
             WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
             String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(currentText));
@@ -534,7 +560,7 @@ public class PjWikiView extends FrameView {
             fstream.close();
             contentTextPane.setPage(tempFile.toURL());
         }catch(Exception e){
-            JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            displayException(e);
         }
         contentTextPane.revalidate();
     }
@@ -545,7 +571,7 @@ public class PjWikiView extends FrameView {
             contentTextPane.setEditable(true);
             contentTextPane.setText(currentText);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            displayException(e);
         }
         contentTextPane.revalidate();
     }
@@ -564,18 +590,55 @@ public class PjWikiView extends FrameView {
             fstream.close();
             contentTextPane.setPage(tempFile.toURL());
         }catch(Exception e){
-            JOptionPane.showMessageDialog(PjWikiApp.getApplication().getMainFrame(),e.toString());
+            displayException(e);
         }
         contentTextPane.revalidate();    
     }
 
     public boolean displayCreateNewWordDialog(WikiWordPageBase word)
     {
-        return 0 == displayYesNoCancel(
+        boolean create = 
+                (0 == displayYesNoCancel(
                 "Create "+word.getWord().name() + "?",
                 word.getWord().name() + 
-                    " does not exist. Would you like to create it?");
+                " does not exist. Would you like to create it?"));
+        if(create)
+        {
+            try{
+                word.save("");
+                this.setCurrentWikiWordPage(word);
+            } catch (Exception e)
+            {
+                displayException(e);
+            }
+        }
+        return create;
     }
+    boolean displaySaveChangesDialoge() {
+        boolean saveSucceeded = true;
+        if(contentTextPane.getText() != currentText)
+        {
+            int response = displayYesNoCancel
+                    ("Save changes?",
+                     currentWikiWordPage.getWord().name() +
+                     "has been changed. Would you like to save it?");
+            switch(response)
+            {
+                case 0: //yes
+                    saveSucceeded = saveCurrentWord();
+                    break;
+                case 1: //no
+                    saveSucceeded = true; // they don't want to save, continue
+                    break;
+                case 2: //cancel
+                    saveSucceeded = false; // they don't want to continue
+                    break;
+            }
+        }
+        return saveSucceeded;
+    }
+
+    
     
     public void setCurrentWikiWordPage(WikiWordPageBase word)
     {
@@ -612,5 +675,6 @@ public class PjWikiView extends FrameView {
     private int busyIconIndex = 0;
 
     private JDialog aboutBox;
+
 
 }
