@@ -26,10 +26,21 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.text.StyledEditorKit;
 
+interface PjWikiStateChanges
+{
+    public void showViewing();
+    public void showEditing();
+    public void showPreviewing();
+    public boolean displayCreateNewWordDialog(WikiWordPageBase word);
+    public boolean displaySaveChangesDialog();
+}
+
+
+
 /**
  * The application's main frame.
  */
-public class PjWikiView extends FrameView {
+public class PjWikiView extends FrameView implements PjWikiStateChanges {
 
     private WikiWordPageBase currentWikiWordPage;
     private List<WikiWordPageBase> history;
@@ -37,7 +48,7 @@ public class PjWikiView extends FrameView {
     private WikiSyntaxManager wikiSyntaxManager;
     private WikiWordPageFactoryBase pageFactory;
     private List<String> externalProtocols;
-    private PjWikiStateMachine stateMachine;
+    private PjWikiViewStateMachine stateMachine;
     private String loadedText;
     private String previewText;
 
@@ -125,7 +136,7 @@ public class PjWikiView extends FrameView {
 
         history = new ArrayList<WikiWordPageBase>();
         wikiSyntaxManager = new WikiSyntaxManager();
-        stateMachine = new PjWikiStateMachine(this);
+        stateMachine = new PjWikiViewStateMachine(this);
     }
 
     public boolean saveCurrentWord() {
@@ -621,9 +632,10 @@ public class PjWikiView extends FrameView {
         }
         return create;
     }
-    boolean displaySaveChangesDialoge() {
+    public boolean displaySaveChangesDialog()
+    {
         boolean saveSucceeded = true;
-        if(contentTextPane.getText() != loadedText)
+        if(!contentTextPane.getText().equals(loadedText))
         {
             int response = displayYesNoCancel
                     ("Save changes?",
