@@ -33,6 +33,11 @@ public class PjWikiViewStateMachine
     public void transitionExit(WikiWordPageBase word) throws Exception
         { currentState = currentState.transitionExit(word);  }
     
+    public Class getState()
+    {
+        return currentState.getClass();
+    }
+    
     public abstract class State
     {
         public abstract State transitionNavigate(WikiWordPageBase word) throws Exception;
@@ -122,6 +127,7 @@ public class PjWikiViewStateMachine
         public State transitionNavigate(WikiWordPageBase word) throws Exception {
             if(view.displaySaveChangesDialog())
             {
+                view.setCurrentWikiWordPage(word);
                 return new Viewing(); // load and display current text
             }
             else
@@ -144,11 +150,12 @@ public class PjWikiViewStateMachine
         public State transitionSave(WikiWordPageBase word) throws Exception {
             if(view.saveCurrentWord())
             {
-                return this;
+                view.setCurrentWikiWordPage(word);
+                return new Viewing();
             }
             else
             {
-                return new Viewing();
+                return this;
             }
             
         }
@@ -182,7 +189,15 @@ public class PjWikiViewStateMachine
 
         @Override
         public State transitionNavigate(WikiWordPageBase word) throws Exception {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(view.displaySaveChangesDialog())
+            {
+                view.setCurrentWikiWordPage(word);
+                return new Viewing(); // load and display current text
+            }
+            else
+            {
+                return this;
+            }
         }
 
         @Override
@@ -200,6 +215,7 @@ public class PjWikiViewStateMachine
         public State transitionSave(WikiWordPageBase word) throws Exception {
             if(view.saveCurrentWord())
             {
+                view.setCurrentWikiWordPage(word);
                 return new Viewing();
             }
             else
