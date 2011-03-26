@@ -16,18 +16,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.text.StyledEditorKit;
+import org.lobobrowser.html.gui.HtmlPanel;
+import org.lobobrowser.html.test.SimpleHtmlRendererContext;
 
 interface PjWikiStateChanges
 {
@@ -54,6 +51,8 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
     private PjWikiViewStateMachine stateMachine;
     private String loadedText;
     private String previewText;
+    
+    private HtmlPanel htmlPanel;
 
     /**
      *
@@ -68,6 +67,11 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
 
         this.pageFactory = pageFactory;
         initComponents();
+        
+        htmlPanel = new HtmlPanel();
+        contentPanel.add(htmlPanel);
+        htmlPanel.invalidate();
+        
 
         // status bar initialization - message timeout, idle icon and busy animation, etc
         ResourceMap resourceMap = getResourceMap();
@@ -182,8 +186,6 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         mainPanel = new javax.swing.JPanel();
         wikiViewSplitPane = new javax.swing.JSplitPane();
         contentPanel = new javax.swing.JPanel();
-        contentScrollPane = new javax.swing.JScrollPane();
-        contentTextPane = new javax.swing.JTextPane();
         contentToolbar = new javax.swing.JToolBar();
         contentToolbarPane = new javax.swing.JPanel();
         navigationToolbar = new javax.swing.JPanel();
@@ -198,6 +200,8 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         searchButton = new javax.swing.JButton();
         editToolbar = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        contentScrollPane = new javax.swing.JScrollPane();
+        contentTextPane = new javax.swing.JTextArea();
         tableOfContentsJPanel = new javax.swing.JPanel();
         tableOfContentsScrollPane = new javax.swing.JScrollPane();
         tocTextPane = new javax.swing.JTextPane();
@@ -221,19 +225,6 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
 
         contentPanel.setName("contentPanel"); // NOI18N
         contentPanel.setLayout(new java.awt.BorderLayout());
-
-        contentScrollPane.setName("contentScrollPane"); // NOI18N
-
-        contentTextPane.setDoubleBuffered(true);
-        contentTextPane.setName("contentTextPane"); // NOI18N
-        contentTextPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
-            public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
-                contentTextPaneHyperlinkUpdate(evt);
-            }
-        });
-        contentScrollPane.setViewportView(contentTextPane);
-
-        contentPanel.add(contentScrollPane, java.awt.BorderLayout.CENTER);
 
         contentToolbar.setFloatable(false);
         contentToolbar.setRollover(true);
@@ -336,6 +327,15 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         contentToolbar.add(contentToolbarPane);
 
         contentPanel.add(contentToolbar, java.awt.BorderLayout.PAGE_START);
+
+        contentScrollPane.setName("contentScrollPane"); // NOI18N
+
+        contentTextPane.setColumns(20);
+        contentTextPane.setRows(5);
+        contentTextPane.setName("contentTextPane"); // NOI18N
+        contentScrollPane.setViewportView(contentTextPane);
+
+        contentPanel.add(contentScrollPane, java.awt.BorderLayout.CENTER);
 
         wikiViewSplitPane.setRightComponent(contentPanel);
 
@@ -460,32 +460,6 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
 
     }//GEN-LAST:event_contentToolbarComponentRemoved
 
-    private void contentTextPaneHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_contentTextPaneHyperlinkUpdate
-        if(evt.getEventType() == javax.swing.event.HyperlinkEvent.EventType.ACTIVATED) {
-
-            URL url = evt.getURL();
-            if(url != null && !url.sameFile(contentTextPane.getPage()) && externalProtocols.contains(url.getProtocol())) {
-                String osName = System.getProperty("os.name");
-                if (osName.startsWith("Windows"))
-                    try {
-                        Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
-                        // JAVA 6: java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-                    } catch (IOException ex) {
-                        Logger.getLogger(PjWikiView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                // JAVA 6: java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
-            } else {
-                if(evt.getDescription().charAt(0) == '#') {
-                    try {
-                        contentTextPane.setPage(contentTextPane.getPage().toString().split("#")[0] + evt.getDescription());
-                    } catch (IOException ex) {
-                        Logger.getLogger(PjWikiView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-}//GEN-LAST:event_contentTextPaneHyperlinkUpdate
-
     private void navLocationTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_navLocationTextField1KeyReleased
         if(evt.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE)
         {
@@ -504,7 +478,7 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
     private javax.swing.JScrollPane contentScrollPane;
-    private javax.swing.JTextPane contentTextPane;
+    private javax.swing.JTextArea contentTextPane;
     private javax.swing.JToolBar contentToolbar;
     private javax.swing.JPanel contentToolbarPane;
     private javax.swing.JButton editButton;
@@ -572,29 +546,26 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
             WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
             WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
             String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(loadedText));
-            //contentTextPane.setContentType("text/html");
-            contentTextPane.setEditable(false);
-            contentTextPane.setContentType("text/html");
-            File tempFile = File.createTempFile("wiki", ".html");
-            FileWriter fstream = new FileWriter(tempFile);
-            fstream.write(text);
-            fstream.close();
-            contentTextPane.setPage(tempFile.toURL());
+            contentPanel.remove(contentScrollPane); 
+            contentPanel.add(htmlPanel);
+            htmlPanel.setHtml(text, null, new SimpleHtmlRendererContext(htmlPanel));
         }catch(Exception e){
             displayException(e);
         }
-        contentTextPane.revalidate();
+        contentPanel.revalidate();    
     }
     public void showEditing()
     {
         try{
-            contentTextPane.setEditorKit(new StyledEditorKit());
+            //contentTextPane.setEditorKit(new StyledEditorKit());
             contentTextPane.setEditable(true);
             contentTextPane.setText(previewText);
+            contentPanel.remove(htmlPanel);
+            contentPanel.add(contentScrollPane);
         }catch(Exception e){
             displayException(e);
         }
-        contentTextPane.revalidate();
+        contentPanel.revalidate();
     }
     public void showPreviewing()
     {
@@ -603,17 +574,13 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
             WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
             WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
             String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(contentTextPane.getText()));
-            contentTextPane.setEditable(false);
-            contentTextPane.setContentType("text/html");
-            File tempFile = File.createTempFile("wiki", ".html");
-            FileWriter fstream = new FileWriter(tempFile);
-            fstream.write(text);
-            fstream.close();
-            contentTextPane.setPage(tempFile.toURL());
+            contentPanel.remove(contentScrollPane); 
+            contentPanel.add(htmlPanel);
+            htmlPanel.setHtml(text, null, new SimpleHtmlRendererContext(htmlPanel));
         }catch(Exception e){
             displayException(e);
         }
-        contentTextPane.revalidate();    
+        contentPanel.revalidate();    
     }
 
     public boolean displayCreateNewWordDialog(WikiWordPageBase word)
