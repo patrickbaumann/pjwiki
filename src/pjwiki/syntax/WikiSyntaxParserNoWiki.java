@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package pjwiki;
+package pjwiki.syntax;
 
 import java.util.List;
 import java.util.Vector;

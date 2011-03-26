@@ -4,6 +4,9 @@
 
 package pjwiki;
 
+import pjwiki.syntax.WikiSyntaxParserHeaders;
+import pjwiki.syntax.WikiSyntaxManager;
+import pjwiki.syntax.WikiSyntaxParserFormatting;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;

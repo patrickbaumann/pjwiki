@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 
-package pjwiki;
+package pjwiki.syntax;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import pjwiki.*;
 /**
  *
  * @author aq615c

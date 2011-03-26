@@ -5,6 +5,7 @@
 
 package pjwiki;
 
+import pjwiki.syntax.WikiSyntaxParserLists;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

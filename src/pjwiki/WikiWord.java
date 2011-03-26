@@ -15,13 +15,13 @@ import java.util.regex.Pattern;
  * @author Patrick
  */
 public class WikiWord {
-    WikiWord(String rawString)
+    public WikiWord(String rawString)
     {
         input = rawString;
         init();
 
     }
-    WikiWord(String rawString, WikiWord parent)
+    public WikiWord(String rawString, WikiWord parent)
     {
         if(rawString.charAt(0) == DELIMITER)
         {

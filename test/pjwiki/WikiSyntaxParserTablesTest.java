@@ -5,6 +5,7 @@
 
 package pjwiki;
 
+import pjwiki.syntax.WikiSyntaxParserTables;
 import java.util.regex.Pattern;
 import org.junit.After;
 import org.junit.AfterClass;
