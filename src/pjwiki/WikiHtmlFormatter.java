@@ -28,5 +28,5 @@ public class WikiHtmlFormatter {
     }
 
     public static String css =
-            "#TOC { background-color:red; float:right; width:30%;}";
+            "#TOC { float:right; width:50%;}";
 }
