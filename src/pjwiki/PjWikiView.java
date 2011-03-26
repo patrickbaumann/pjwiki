@@ -543,12 +543,7 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
     {
         try{
             loadContent();
-            WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
-            WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
-            String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(loadedText));
-            contentPanel.remove(contentScrollPane); 
-            contentPanel.add(htmlPanel);
-            htmlPanel.setHtml(text, null, new SimpleHtmlRendererContext(htmlPanel));
+            renderToHtmlPanel(loadedText);
         }catch(Exception e){
             displayException(e);
         }
@@ -571,15 +566,17 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
     {
         previewText = contentTextPane.getText(); // store for retrieval in edit mode
         try{
-            WikiSyntaxParserFormatting w = new WikiSyntaxParserFormatting();
-            WikiSyntaxParserHeaders w2 = new WikiSyntaxParserHeaders();
-            String text = WikiHtmlFormatter.format(wikiSyntaxManager.format(contentTextPane.getText()));
-            contentPanel.remove(contentScrollPane); 
-            contentPanel.add(htmlPanel);
-            htmlPanel.setHtml(text, null, new SimpleHtmlRendererContext(htmlPanel));
+            renderToHtmlPanel(previewText);
         }catch(Exception e){
             displayException(e);
         }
+    }
+
+    private void renderToHtmlPanel(String text) {
+        String renderedTexted = WikiHtmlFormatter.format(wikiSyntaxManager.format(text));
+        contentPanel.remove(contentScrollPane); 
+        contentPanel.add(htmlPanel);
+        htmlPanel.setHtml(renderedTexted, null, new SimpleHtmlRendererContext(htmlPanel));
         contentPanel.revalidate();    
     }
 
@@ -627,8 +624,7 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         return saveSucceeded;
     }
 
-    
-    
+   
     public void setCurrentWikiWordPage(WikiWordPageBase word)
     {
         try{
