@@ -198,9 +198,9 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         searchTextField = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         editToolbar = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         contentScrollPane = new javax.swing.JScrollPane();
         contentTextPane = new javax.swing.JTextArea();
+        previewButton = new javax.swing.JButton();
         tableOfContentsJPanel = new javax.swing.JPanel();
         tableOfContentsScrollPane = new javax.swing.JScrollPane();
         tocTextPane = new javax.swing.JTextPane();
@@ -208,6 +208,9 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         homeButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
         javax.swing.JMenu helpMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem aboutMenuItem = new javax.swing.JMenuItem();
@@ -312,14 +315,14 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         editToolbar.setName("editToolbar"); // NOI18N
         editToolbar.setLayout(new javax.swing.BoxLayout(editToolbar, javax.swing.BoxLayout.LINE_AXIS));
 
-        jButton1.setText(resourceMap.getString("previewButton.text")); // NOI18N
-        jButton1.setName("previewButton"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        previewButton.setText(resourceMap.getString("previewButton.text")); // NOI18N
+        previewButton.setName("previewButton"); // NOI18N
+        previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                previewButtonActionPerformed(evt);
             }
         });
-        editToolbar.add(jButton1);
+        editToolbar.add(previewButton);
 
         contentToolbarPane.add(editToolbar);
 
@@ -378,6 +381,22 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
 
         fileMenu.setText(resourceMap.getString("fileMenu.text")); // NOI18N
         fileMenu.setName("fileMenu"); // NOI18N
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText(resourceMap.getString("jMenuItem1.text")); // NOI18N
+        jMenuItem1.setName("jMenuItem1"); // NOI18N
+        fileMenu.add(jMenuItem1);
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
+        jMenuItem3.setName("jMenuItem3"); // NOI18N
+        fileMenu.add(jMenuItem3);
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
+        jMenuItem2.setEnabled(false);
+        jMenuItem2.setName("jMenuItem2"); // NOI18N
+        fileMenu.add(jMenuItem2);
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(pjwiki.PjWikiApp.class).getContext().getActionMap(PjWikiView.class, this);
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
@@ -449,7 +468,14 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         try {
-            stateMachine.transitionEdit(currentWikiWordPage);
+            if(stateMachine.getState() == PjWikiViewStateMachine.Viewing.class)
+            {
+                stateMachine.transitionEdit(currentWikiWordPage);
+            }
+            else
+            {
+                stateMachine.transitionSave(currentWikiWordPage);
+            }
         } catch (Exception ex) {
             displayException(ex);
         }
@@ -466,13 +492,20 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
         }
     }//GEN-LAST:event_navLocationTextField1KeyReleased
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         try {
-            stateMachine.transitionPreview(currentWikiWordPage);
+            if(stateMachine.getState() == PjWikiViewStateMachine.Editing.class)
+            {
+                stateMachine.transitionPreview(currentWikiWordPage);
+            }
+            else
+            {
+                stateMachine.transitionEdit(currentWikiWordPage);
+            }
         } catch (Exception ex) {
             displayException(ex);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_previewButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
@@ -484,7 +517,9 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
     private javax.swing.JToolBar.Separator editSearchSeparator;
     private javax.swing.JPanel editToolbar;
     private javax.swing.JButton homeButton;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton navBackButton;
@@ -493,6 +528,7 @@ public class PjWikiView extends FrameView implements PjWikiStateChanges {
     private javax.swing.JButton navGoButton;
     private javax.swing.JTextField navLocationTextField1;
     private javax.swing.JPanel navigationToolbar;
+    private javax.swing.JButton previewButton;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchTextField;
